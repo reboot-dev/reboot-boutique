@@ -3,31 +3,31 @@ load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 py_library(
     name = "constants_py",
     srcs = ["constants.py"],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
 )
 
 py_library(
     name = "logger_py",
     srcs = ["logger.py"],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
 )
 
 py_library(
     name = "app_py",
     srcs = ["app.py"],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [
-        "//microservices_demo/api:demo_py_grpc",
-        "//microservices_demo/backend:constants_py",
-        "//microservices_demo/backend:logger_py",
-        "//microservices_demo/backend/cart:servicer_py",
-        "//microservices_demo/backend/checkout:servicer_py",
-        "//microservices_demo/backend/currencyconverter:servicer_py",
-        "//microservices_demo/backend/emailer:servicer_py",
-        "//microservices_demo/backend/productcatalog:servicer_py",
-        "//microservices_demo/backend/shipping:servicer_py",
         "//resemble:rsm",
         "//resemble/aio:python",
+        "//resemble/boutique/api:demo_py_grpc",
+        "//resemble/boutique/backend:constants_py",
+        "//resemble/boutique/backend:logger_py",
+        "//resemble/boutique/backend/cart:servicer_py",
+        "//resemble/boutique/backend/checkout:servicer_py",
+        "//resemble/boutique/backend/currencyconverter:servicer_py",
+        "//resemble/boutique/backend/emailer:servicer_py",
+        "//resemble/boutique/backend/productcatalog:servicer_py",
+        "//resemble/boutique/backend/shipping:servicer_py",
     ],
 )
 
@@ -35,7 +35,7 @@ py_binary(
     name = "app",
     srcs = ["app.py"],
     main = "app.py",
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [
         ":app_py",
     ],

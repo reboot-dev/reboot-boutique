@@ -1,8 +1,8 @@
 import uuid
 from datetime import timedelta
-from microservices_demo.api import demo_pb2
-from microservices_demo.api.demo_rsm import Shipping
 from resemble.aio.contexts import ReaderContext, WriterContext
+from resemble.boutique.api import demo_pb2
+from resemble.boutique.api.demo_rsm import Shipping
 
 
 class ShippingServicer(Shipping.Interface):

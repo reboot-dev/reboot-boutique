@@ -3,9 +3,9 @@ load("@rules_python//python:defs.bzl", "py_library")
 py_library(
     name = "servicer_py",
     srcs = ["servicer.py"],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [
-        "//microservices_demo/api:demo_py_resemble",
         "//resemble/aio:python",
+        "//resemble/boutique/api:demo_py_resemble",
     ],
 )

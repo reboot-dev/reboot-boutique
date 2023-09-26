@@ -14,9 +14,8 @@
 
 syntax = "proto3";
 
-package microservices_demo.api;
+package resemble.boutique.api;
 
-import "google/api/annotations.proto";
 import "resemble/v1alpha1/options.proto";
 
 // ----------------WORKAROUND--------------------
@@ -39,9 +38,6 @@ service Cart {
   rpc AddItem(AddItemRequest) returns (Empty) {
     option (.resemble.v1alpha1.method).writer = {
     };
-    option (google.api.http) = {
-      post: "/AddItem"
-    };
   }
   rpc GetItems(GetItemsRequest) returns (GetItemsResponse) {
     option (.resemble.v1alpha1.method).reader = {
@@ -49,9 +45,6 @@ service Cart {
   }
   rpc EmptyCart(EmptyCartRequest) returns (Empty) {
     option (.resemble.v1alpha1.method).writer = {
-    };
-    option (google.api.http) = {
-      post: "/EmptyCart"
     };
   }
 
@@ -130,10 +123,6 @@ service ProductCatalog {
   rpc GetProduct(GetProductRequest) returns (Product) {
     option (.resemble.v1alpha1.method).reader = {
     };
-    // THIS IS A BUG: this should be a get.
-    option (google.api.http) = {
-      post: "/GetProduct",
-    };
   }
   rpc SearchProducts(SearchProductsRequest) returns (SearchProductsResponse) {
     option (.resemble.v1alpha1.method).reader = {
@@ -185,9 +174,6 @@ service Shipping {
 
   rpc GetQuote(GetQuoteRequest) returns (GetQuoteResponse) {
     option (.resemble.v1alpha1.method).writer = {
-    };
-    option (google.api.http) = {
-      post: "/GetQuote",
     };
   }
   rpc PrepareShipOrder(PrepareShipOrderRequest)
@@ -250,14 +236,8 @@ message Address {
 
 service CurrencyConverter {
   rpc GetSupportedCurrencies(Empty) returns (GetSupportedCurrenciesResponse) {
-    option (google.api.http) = {
-      get: "/get_supported_currencies",
-    };
   }
   rpc Convert(CurrencyConversionRequest) returns (CurrencyConversionResponse) {
-    option (google.api.http) = {
-      post: "/convert",
-    };
   }
 }
 
@@ -383,9 +363,6 @@ service Checkout {
     option (.resemble.v1alpha1.method).writer = {
       constructor: true
     };
-    option (google.api.http) = {
-      post: "/Create",
-    };
   }
 
   rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse) {
@@ -393,16 +370,10 @@ service Checkout {
       transaction: {},
       errors: [ "ShippingQuoteInvalidOrExpired" ],
     };
-    option (google.api.http) = {
-      post: "/PlaceOrder",
-    };
   }
 
   rpc Orders(OrdersRequest) returns (OrdersResponse) {
     option (.resemble.v1alpha1.method).reader = {
-    };
-    option (google.api.http) = {
-      post: "/Orders",
     };
   }
 }

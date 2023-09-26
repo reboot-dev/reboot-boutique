@@ -2,7 +2,7 @@ import aiohttp
 import asyncio
 import random
 from abc import ABC, abstractmethod
-from microservices_demo.api import demo_pb2
+from resemble.boutique.api import demo_pb2
 from typing import Any, Optional
 
 

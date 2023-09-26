@@ -1,14 +1,14 @@
 import datetime
 import os
 import unittest
-from microservices_demo.api import demo_pb2
-from microservices_demo.api.demo_rsm import Cart
-from microservices_demo.backend.cart.servicer import CartServicer
-# We must import ONLY the method, so that when our test mocks this method later
-# it can still call the original method.
-from microservices_demo.backend.helpers.mailgun import MockMailgunAPI
 from resemble.aio.tests import Resemble
 from resemble.aio.workflows import Workflow
+from resemble.boutique.api import demo_pb2
+from resemble.boutique.api.demo_rsm import Cart
+from resemble.boutique.backend.cart.servicer import CartServicer
+# We must import ONLY the method, so that when our test mocks this method later
+# it can still call the original method.
+from resemble.boutique.backend.helpers.mailgun import MockMailgunAPI
 from unittest import mock
 
 
@@ -40,10 +40,10 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
             return mock_emailer
 
         with unittest.mock.patch(
-            'microservices_demo.backend.helpers.mailgun._get_mailgun_api',
+            'resemble.boutique.backend.helpers.mailgun._get_mailgun_api',
             mock_get_mailgun_api,
         ), unittest.mock.patch(
-            'microservices_demo.backend.cart.servicer.CartServicer.schedule',
+            'resemble.boutique.backend.cart.servicer.CartServicer.schedule',
             mock_schedule,
         ):
             await self.rsm.up(servicers=[CartServicer], in_process=True)

@@ -11,26 +11,26 @@ from jinja2 import (
     TemplateError,
     select_autoescape,
 )
-from microservices_demo.api import demo_pb2, demo_pb2_grpc
-from microservices_demo.api.demo_rsm import (
-    Cart,
-    Checkout,
-    Emailer,
-    ProductCatalog,
-    Shipping,
-)
-from microservices_demo.backend.constants import (
-    EMAILER_ACTOR_ID,
-    PRODUCT_CATALOG_ACTOR_ID,
-    SHIPPING_ACTOR_ID,
-)
-from microservices_demo.backend.logger import logger
 from pyprotoc_plugin.helpers import add_template_path, load_template
 from resemble.aio.contexts import (
     ReaderContext,
     TransactionContext,
     WriterContext,
 )
+from resemble.boutique.api import demo_pb2, demo_pb2_grpc
+from resemble.boutique.api.demo_rsm import (
+    Cart,
+    Checkout,
+    Emailer,
+    ProductCatalog,
+    Shipping,
+)
+from resemble.boutique.backend.constants import (
+    EMAILER_ACTOR_ID,
+    PRODUCT_CATALOG_ACTOR_ID,
+    SHIPPING_ACTOR_ID,
+)
+from resemble.boutique.backend.logger import logger
 
 
 class CheckoutServicer(Checkout.Interface):

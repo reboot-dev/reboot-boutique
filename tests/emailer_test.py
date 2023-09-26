@@ -1,17 +1,17 @@
 import os
 import unittest
-from microservices_demo.api import demo_pb2
-from microservices_demo.api.demo_rsm import Emailer
-from microservices_demo.backend.constants import EMAILER_ACTOR_ID
-from microservices_demo.backend.emailer.servicer import MailgunServicer
+from resemble.aio.tests import Resemble
+from resemble.aio.workflows import Workflow
+from resemble.boutique.api import demo_pb2
+from resemble.boutique.api.demo_rsm import Emailer
+from resemble.boutique.backend.constants import EMAILER_ACTOR_ID
+from resemble.boutique.backend.emailer.servicer import MailgunServicer
 # We must import ONLY the method, so that when our test mocks this method later
 # it can still call the original method.
-from microservices_demo.backend.helpers.mailgun import (
+from resemble.boutique.backend.helpers.mailgun import (
     MailgunAPIError,
     MockMailgunAPI,
 )
-from resemble.aio.tests import Resemble
-from resemble.aio.workflows import Workflow
 from resemble.rsm import fail
 from typing import Dict, Optional
 from unittest import mock
@@ -61,10 +61,10 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
                 raise MailgunAPIError("Ooops, some error, retry the task!")
 
         with unittest.mock.patch(
-            'microservices_demo.backend.helpers.mailgun._get_mailgun_api',
+            'resemble.boutique.backend.helpers.mailgun._get_mailgun_api',
             mock_get_mailgun_api
         ), unittest.mock.patch(
-            'microservices_demo.backend.helpers.mailgun.MockMailgunAPI.send_email',
+            'resemble.boutique.backend.helpers.mailgun.MockMailgunAPI.send_email',
             mock_send_email
         ):
             await self.rsm.up(servicers=[MailgunServicer], in_process=True)

@@ -6,9 +6,9 @@ py_library(
     data = [
         "currency_conversions.json",
     ],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [
-        "//microservices_demo/api:demo_py_grpc",
         "//resemble/aio:python",
+        "//resemble/boutique/api:demo_py_grpc",
     ],
 )

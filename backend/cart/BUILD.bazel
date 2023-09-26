@@ -8,9 +8,9 @@ py_library(
     data = [
         "templates/cart_reminder.html",
     ],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [
-        "//microservices_demo/api:demo_py_resemble",
-        "//microservices_demo/backend/helpers:mailgun_py",
+        "//resemble/boutique/api:demo_py_resemble",
+        "//resemble/boutique/backend/helpers:mailgun_py",
     ],
 )

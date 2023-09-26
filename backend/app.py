@@ -2,33 +2,33 @@ import asyncio
 import grpc
 import os
 from concurrent import futures
-from microservices_demo.api import demo_pb2, demo_pb2_grpc, demo_rsm
-from microservices_demo.api.demo_rsm import (
+from resemble.aio.applications import Application
+from resemble.aio.servicers import Serviceable, Servicer
+from resemble.aio.types import assert_type
+from resemble.aio.workflows import Workflow
+from resemble.boutique.api import demo_pb2, demo_pb2_grpc, demo_rsm
+from resemble.boutique.api.demo_rsm import (
     Cart,
     Checkout,
     Emailer,
     ProductCatalog,
 )
-from microservices_demo.backend.cart.servicer import CartServicer
-from microservices_demo.backend.checkout.servicer import CheckoutServicer
-from microservices_demo.backend.constants import (
+from resemble.boutique.backend.cart.servicer import CartServicer
+from resemble.boutique.backend.checkout.servicer import CheckoutServicer
+from resemble.boutique.backend.constants import (
     CHECKOUT_ACTOR_ID,
     EMAILER_ACTOR_ID,
     PRODUCT_CATALOG_ACTOR_ID,
 )
-from microservices_demo.backend.currencyconverter.servicer import (
+from resemble.boutique.backend.currencyconverter.servicer import (
     CurrencyConverterServicer,
 )
-from microservices_demo.backend.emailer.servicer import MailgunServicer
-from microservices_demo.backend.logger import logger
-from microservices_demo.backend.productcatalog.servicer import (
+from resemble.boutique.backend.emailer.servicer import MailgunServicer
+from resemble.boutique.backend.logger import logger
+from resemble.boutique.backend.productcatalog.servicer import (
     ProductCatalogServicer,
 )
-from microservices_demo.backend.shipping.servicer import ShippingServicer
-from resemble.aio.applications import Application
-from resemble.aio.servicers import Serviceable, Servicer
-from resemble.aio.types import assert_type
-from resemble.aio.workflows import Workflow
+from resemble.boutique.backend.shipping.servicer import ShippingServicer
 from resemble.rsm import fail
 from respect.logging import formatter
 

@@ -2,8 +2,8 @@ import grpc
 import json
 import os
 from google.protobuf.json_format import ParseDict
-from microservices_demo.api import demo_pb2, demo_pb2_grpc
 from resemble.aio.contexts import ReaderContext, WriterContext
+from resemble.boutique.api import demo_pb2, demo_pb2_grpc
 
 NANOS_CONVERSION = 1000000000
 

@@ -10,13 +10,13 @@ from jinja2 import (
     TemplateError,
     select_autoescape,
 )
-from microservices_demo.api import demo_pb2
-from microservices_demo.api.demo_rsm import Emailer
-# Import the whole `mailgun` module, and not only the `mailgun.send_email`
-# method, so that tests can still mock `mailgun.send_email` for us.
-from microservices_demo.backend.helpers import mailgun
 from resemble.aio.contexts import ReaderContext, WriterContext
 from resemble.aio.tasks import TaskEffect
+from resemble.boutique.api import demo_pb2
+from resemble.boutique.api.demo_rsm import Emailer
+# Import the whole `mailgun` module, and not only the `mailgun.send_email`
+# method, so that tests can still mock `mailgun.send_email` for us.
+from resemble.boutique.backend.helpers import mailgun
 from typing import Any, Optional
 
 

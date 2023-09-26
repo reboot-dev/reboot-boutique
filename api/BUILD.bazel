@@ -7,7 +7,7 @@ load("@rules_python//python:defs.bzl", "py_library")
 py_resemble_files(
     name = "demo_resemble_gen_py",
     srcs = ["demo.proto"],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [
         ":demo_proto",
         # We must unfortunately repeat the dependencies of `:demo_proto`
@@ -25,7 +25,7 @@ py_resemble_files(
 py_library(
     name = "demo_py_resemble",
     srcs = [":demo_resemble_gen_py"],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [
         requirement("protobuf"),
         requirement("grpcio"),
@@ -42,7 +42,7 @@ py_library(
 proto_library(
     name = "demo_proto",
     srcs = [":demo.proto"],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [
         # NOTE: We must unfortunately repeat these dependencies again in the
         # `:greeter_resemble_gen_py` target, AND also all of the dependencies'
@@ -59,14 +59,14 @@ proto_library(
 
 py_proto_library(
     name = "demo_py_proto",
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [":demo_proto"],
 )
 
 py_grpc_library(
     name = "demo_py_grpc",
     srcs = [":demo_proto"],
-    visibility = ["//microservices_demo:__subpackages__"],
+    visibility = ["//resemble/boutique:__subpackages__"],
     deps = [":demo_py_proto"],
 )
 
