@@ -1,0 +1,42 @@
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_test(
+    name = "full_app_test_py",
+    srcs = [":full_app_test.py"],
+    main = "full_app_test.py",
+    deps = [
+        "//microservices_demo/backend:app_py",
+        "//microservices_demo/backend:constants_py",
+        "//microservices_demo/backend/cart:servicer_py",
+        "//microservices_demo/backend/checkout:servicer_py",
+        "//microservices_demo/backend/currencyconverter:servicer_py",
+        "//microservices_demo/backend/emailer:servicer_py",
+        "//microservices_demo/backend/productcatalog:servicer_py",
+        "//microservices_demo/backend/shipping:servicer_py",
+        "//resemble/aio:python",
+    ],
+)
+
+py_test(
+    name = "cart_test_py",
+    srcs = [":cart_test.py"],
+    main = "cart_test.py",
+    deps = [
+        "//microservices_demo/backend:app_py",
+        "//microservices_demo/backend:constants_py",
+        "//microservices_demo/backend/cart:servicer_py",
+        "//resemble/aio:python",
+    ],
+)
+
+py_test(
+    name = "emailer_test_py",
+    srcs = [":emailer_test.py"],
+    main = "emailer_test.py",
+    deps = [
+        "//microservices_demo/backend:app_py",
+        "//microservices_demo/backend:constants_py",
+        "//microservices_demo/backend/emailer:servicer_py",
+        "//resemble/aio:python",
+    ],
+)

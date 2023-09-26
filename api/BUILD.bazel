@@ -1,0 +1,75 @@
+load("@com_github_grpc_grpc//bazel:python_rules.bzl", "py_grpc_library", "py_proto_library")
+load("@com_github_reboot_dev_respect//resemble:rules.bzl", "py_resemble_files")
+load("@resemble_py_deps//:requirements.bzl", "requirement")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_resemble_files(
+    name = "demo_resemble_gen_py",
+    srcs = ["demo.proto"],
+    visibility = ["//microservices_demo:__subpackages__"],
+    deps = [
+        ":demo_proto",
+        # We must unfortunately repeat the dependencies of `:demo_proto`
+        # AND all of the dependencies' dependencies also.
+        # TODO(rjh): fix that.
+        "//resemble/v1alpha1:options_proto",
+        "//resemble/v1alpha1:tasks_proto",
+        "@com_google_protobuf//:timestamp_proto",
+        "@googleapis//google/api:annotations_proto",
+        "@googleapis//google/api:http_proto",
+        "@com_google_protobuf//:descriptor_proto",
+    ],
+)
+
+py_library(
+    name = "demo_py_resemble",
+    srcs = [":demo_resemble_gen_py"],
+    visibility = ["//microservices_demo:__subpackages__"],
+    deps = [
+        requirement("protobuf"),
+        requirement("grpcio"),
+        requirement("grpcio-status"),
+        ":demo_py_grpc",
+        ":demo_py_proto",
+        "//resemble/aio:python",
+        "//resemble/aio/internals:python",
+        "@googleapis//google/rpc:code_py_proto",
+        "@googleapis//google/rpc:status_py_proto",
+    ],
+)
+
+proto_library(
+    name = "demo_proto",
+    srcs = [":demo.proto"],
+    visibility = ["//microservices_demo:__subpackages__"],
+    deps = [
+        # NOTE: We must unfortunately repeat these dependencies again in the
+        # `:greeter_resemble_gen_py` target, AND also all of the dependencies'
+        # dependencies also.
+        # TODO(rjh): fix that.
+        "//resemble/v1alpha1:options_proto",
+        "//resemble/v1alpha1:tasks_proto",
+        "@com_google_protobuf//:timestamp_proto",
+        "@googleapis//google/api:annotations_proto",
+        "@googleapis//google/api:http_proto",
+        "@com_google_protobuf//:descriptor_proto",
+    ],
+)
+
+py_proto_library(
+    name = "demo_py_proto",
+    visibility = ["//microservices_demo:__subpackages__"],
+    deps = [":demo_proto"],
+)
+
+py_grpc_library(
+    name = "demo_py_grpc",
+    srcs = [":demo_proto"],
+    visibility = ["//microservices_demo:__subpackages__"],
+    deps = [":demo_py_proto"],
+)
+
+exports_files([
+    "demo.proto",
+])

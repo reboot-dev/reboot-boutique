@@ -1,0 +1,12 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "mailgun_py",
+    srcs = [
+        "mailgun.py",
+    ],
+    visibility = ["//microservices_demo:__subpackages__"],
+    deps = [
+        "//microservices_demo/api:demo_py_resemble",
+    ],
+)
