@@ -17,3 +17,21 @@ ts_resemble_files_in_source_tree(
         "@com_google_protobuf//:descriptor_proto",
     ],
 )
+
+# This rule allows a `bazel` system configured outside of this
+# repository to use code in this directory and its subdirectories.
+filegroup(
+    name = "everything",
+    srcs = glob(
+        ["**/*"],
+        exclude = [
+            # Folders that may be created by activity in this repository, such
+            # as manually following the steps of the `README.md` file, but which
+            # are not part of the "source code" of this repository.
+            ".resemble-boutique-venv/**/*",
+            ".pytest_cache/**/*",
+            "gen/**/*",
+        ],
+    ),
+    visibility = ["//visibility:public"],
+)
