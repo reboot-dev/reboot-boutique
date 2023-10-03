@@ -18,8 +18,8 @@ export const Product = ({ cartActorId, userCurrency }: ProductProps) => {
   const navigate = useNavigate();
   const [selectedQuantity, setSelectedQuantity] = useState("1");
 
-  const { AddItem } = CartActor({ actorId: cartActorId });
-  const { GetProduct } = ProductCatalog({ actorId: "product-catalog" });
+  const { AddItem } = CartActor({ Id: cartActorId });
+  const { GetProduct } = ProductCatalog({ Id: "product-catalog" });
   const [product, setProduct] = useState<pb_Product>();
 
   useEffect(() => {

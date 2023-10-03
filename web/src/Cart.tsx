@@ -40,11 +40,11 @@ export const Cart = ({ cartActorId, userCurrency }: CartProps) => {
   const [shippingCost, setShippingCost] = useState<Money>(new Money());
   const [shippingQuote, setShippingQuote] = useState<ShippingQuote>();
   const [email, setEmail] = useState("someone@example.com");
-  const { GetProduct } = ProductCatalog({ actorId: "product-catalog" });
-  const { GetQuote } = Shipping({ actorId: "shipping" });
-  const { useOrders } = Checkout({ actorId: "checkout" });
+  const { GetProduct } = ProductCatalog({ Id: "product-catalog" });
+  const { GetQuote } = Shipping({ Id: "shipping" });
+  const { useOrders } = Checkout({ Id: "checkout" });
   const { useGetItems, EmptyCart } = CartActor({
-    actorId: cartActorId,
+    Id: cartActorId,
   });
 
   const {
