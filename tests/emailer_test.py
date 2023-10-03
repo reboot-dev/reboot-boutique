@@ -2,8 +2,8 @@ import os
 import unittest
 from resemble.aio.tests import Resemble
 from resemble.aio.workflows import Workflow
-from resemble.boutique.api import demo_pb2
-from resemble.boutique.api.demo_rsm import Emailer
+from resemble.boutique.api.v1 import demo_pb2
+from resemble.boutique.api.v1.demo_rsm import Emailer
 from resemble.boutique.backend.constants import EMAILER_ACTOR_ID
 from resemble.boutique.backend.emailer.servicer import MailgunServicer
 # We must import ONLY the method, so that when our test mocks this method later

@@ -49,11 +49,11 @@ fi
 # skipped in favor of the version already installed.
 pip install $REBOOT_RESEMBLE_PACKAGE
 # Back to what's in the readme verbatim.
-# TODO TODO the requirements.txt is not yet present in this repo
 pip install -r backend/requirements.txt
 
 # Compile protocol buffers.
-rsm protoc ./api/demo.proto
+rsm protoc
 
-# Test.
+# Test. TODO TODO tests are currently failing: "No module named
+# 'resemble.boutique' during imports
 pytest tests/

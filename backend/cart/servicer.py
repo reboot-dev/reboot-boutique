@@ -4,8 +4,8 @@ import uuid
 from datetime import timedelta
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from resemble.aio.contexts import ReaderContext, WriterContext
-from resemble.boutique.api import demo_pb2
-from resemble.boutique.api.demo_rsm import Cart, Emailer
+from resemble.boutique.api.v1 import demo_pb2
+from resemble.boutique.api.v1.demo_rsm import Cart, Emailer
 # Import the whole `mailgun` module, and not only the
 # `mailgun.send_email_idempotently` method, so that tests can still
 # mock `mailgun.send_email_idempotently` for us.

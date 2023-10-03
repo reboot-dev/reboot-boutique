@@ -19,7 +19,7 @@ py_library(
     deps = [
         "//resemble:rsm",
         "//resemble/aio:python",
-        "//resemble/boutique/api:demo_py_grpc",
+        "//resemble/boutique/api/v1:demo_py_grpc",
         "//resemble/boutique/backend:constants_py",
         "//resemble/boutique/backend:logger_py",
         "//resemble/boutique/backend/cart:servicer_py",

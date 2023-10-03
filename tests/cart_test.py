@@ -3,8 +3,8 @@ import os
 import unittest
 from resemble.aio.tests import Resemble
 from resemble.aio.workflows import Workflow
-from resemble.boutique.api import demo_pb2
-from resemble.boutique.api.demo_rsm import Cart
+from resemble.boutique.api.v1 import demo_pb2
+from resemble.boutique.api.v1.demo_rsm import Cart
 from resemble.boutique.backend.cart.servicer import CartServicer
 # We must import ONLY the method, so that when our test mocks this method later
 # it can still call the original method.

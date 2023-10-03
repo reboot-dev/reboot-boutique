@@ -6,8 +6,8 @@ from resemble.aio.applications import Application
 from resemble.aio.servicers import Serviceable, Servicer
 from resemble.aio.types import assert_type
 from resemble.aio.workflows import Workflow
-from resemble.boutique.api import demo_pb2, demo_pb2_grpc, demo_rsm
-from resemble.boutique.api.demo_rsm import (
+from resemble.boutique.api.v1 import demo_pb2, demo_pb2_grpc, demo_rsm
+from resemble.boutique.api.v1.demo_rsm import (
     Cart,
     Checkout,
     Emailer,

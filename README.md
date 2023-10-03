@@ -135,8 +135,8 @@ requirements and run an application:
 <!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./readme_test.sh&lines=32-33) -->
 <!-- The below code snippet is automatically added from ./readme_test.sh -->
 ```sh
-python -m venv ./.boutique-venv
-source ./.boutique-venv/bin/activate
+python -m venv ./.resemble-boutique-venv
+source ./.resemble-boutique-venv/bin/activate
 ```
 <!-- MARKDOWN-AUTO-DOCS:END -->
 
@@ -160,6 +160,8 @@ pip install reboot-resemble-cli
 
 Run the Resemble `protoc` plugin to generate Resemble code based on the protobuf
 definitions for the application:
+
+TODO TODO is this actually necessary? or will `rsm dev` take care of it?
 
 <!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./readme_test.sh&lines=56-56) -->
 <!-- The below code snippet is automatically added from ./readme_test.sh -->

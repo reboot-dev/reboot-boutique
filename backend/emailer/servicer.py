@@ -12,8 +12,8 @@ from jinja2 import (
 )
 from resemble.aio.contexts import ReaderContext, WriterContext
 from resemble.aio.tasks import TaskEffect
-from resemble.boutique.api import demo_pb2
-from resemble.boutique.api.demo_rsm import Emailer
+from resemble.boutique.api.v1 import demo_pb2
+from resemble.boutique.api.v1.demo_rsm import Emailer
 # Import the whole `mailgun` module, and not only the `mailgun.send_email`
 # method, so that tests can still mock `mailgun.send_email` for us.
 from resemble.boutique.backend.helpers import mailgun

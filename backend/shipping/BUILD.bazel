@@ -6,6 +6,6 @@ py_library(
     visibility = ["//resemble/boutique:__subpackages__"],
     deps = [
         "//resemble/aio:python",
-        "//resemble/boutique/api:demo_py_resemble",
+        "//resemble/boutique/api/v1:demo_py_resemble",
     ],
 )
