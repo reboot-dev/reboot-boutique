@@ -31,11 +31,11 @@ const USER_ADDRESS = new Address({
 });
 
 interface CartProps {
-  cartActorId: string;
+  cartId: string;
   userCurrency: string;
 }
 
-export const Cart = ({ cartActorId, userCurrency }: CartProps) => {
+export const Cart = ({ cartId, userCurrency }: CartProps) => {
   const [productItems, setProductItems] = useState<ProductItem[]>([]);
   const [shippingCost, setShippingCost] = useState<Money>(new Money());
   const [shippingQuote, setShippingQuote] = useState<ShippingQuote>();
@@ -44,7 +44,7 @@ export const Cart = ({ cartActorId, userCurrency }: CartProps) => {
   const { GetQuote } = Shipping({ Id: "shipping" });
   const { useOrders } = Checkout({ Id: "checkout" });
   const { useGetItems, EmptyCart } = CartActor({
-    Id: cartActorId,
+    Id: cartId,
   });
 
   const {
@@ -116,7 +116,7 @@ export const Cart = ({ cartActorId, userCurrency }: CartProps) => {
     // For any other error type, just throw.
     const { error } = await PlaceOrder(
       {
-        userId: cartActorId,
+        userId: cartId,
         userCurrency: userCurrency,
         address: USER_ADDRESS,
         creditCard: new CreditCardInfo({

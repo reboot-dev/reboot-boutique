@@ -64,13 +64,13 @@ function App() {
         <Route
           path="product/:productId"
           element={
-            <Product cartActorId={CART_ACTOR_ID} userCurrency={userCurrency} />
+            <Product cartId={CART_ACTOR_ID} userCurrency={userCurrency} />
           }
         />
         <Route
           path="cart"
           element={
-            <Cart cartActorId={CART_ACTOR_ID} userCurrency={userCurrency} />
+            <Cart cartId={CART_ACTOR_ID} userCurrency={userCurrency} />
           }
         />
       </Routes>
