@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Cart } from "./Cart";
 import { Header } from "./Header";
-import { Cart as CartActor } from "./gen/demo_rsm";
+import { Cart as CartActor } from "./gen/demo_rsm_react";
 import "./static/styles/cart.css";
 import "./static/styles/order.css";
 import "./static/styles/styles.css";
