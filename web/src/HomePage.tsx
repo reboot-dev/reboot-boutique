@@ -1,4 +1,4 @@
-import { ProductCatalog } from "gen/demo_rsm";
+import { ProductCatalog } from "gen/demo_rsm_react";
 import { Link } from "react-router-dom";
 import {
   ProductEntry,

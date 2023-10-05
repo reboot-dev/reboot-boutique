@@ -11,7 +11,7 @@ import {
   Checkout,
   ProductCatalog,
   Shipping,
-} from "gen/demo_rsm";
+} from "gen/demo_rsm_react";
 import {
   ProductItem,
   convertedShippingCost,

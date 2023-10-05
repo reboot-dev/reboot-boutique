@@ -1,5 +1,5 @@
 import { Product as pb_Product } from "gen/demo_pb";
-import { Cart as CartActor, ProductCatalog } from "gen/demo_rsm";
+import { Cart as CartActor, ProductCatalog } from "gen/demo_rsm_react";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
