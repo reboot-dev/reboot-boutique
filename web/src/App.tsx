@@ -32,7 +32,7 @@ function App() {
   const [currencies, setCurrencies] = useState(["USD"]);
 
   const { useGetItems } = CartActor({
-    Id: CART_ACTOR_ID,
+    id: CART_ACTOR_ID,
   });
 
   useEffect(() => {

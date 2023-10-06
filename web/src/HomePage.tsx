@@ -13,7 +13,7 @@ interface HomePageProps {
 
 const HomePage = ({ userCurrency }: HomePageProps) => {
   const { useListProducts } = ProductCatalog({
-    Id: "product-catalog",
+    id: "product-catalog",
   });
 
   const { response } = useListProducts();
