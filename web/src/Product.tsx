@@ -9,17 +9,17 @@ import {
 } from "./helpers";
 
 interface ProductProps {
-  cartActorId: string;
+  cartId: string;
   userCurrency: string;
 }
 
-export const Product = ({ cartActorId, userCurrency }: ProductProps) => {
+export const Product = ({ cartId, userCurrency }: ProductProps) => {
   let { productId } = useParams();
   const navigate = useNavigate();
   const [selectedQuantity, setSelectedQuantity] = useState("1");
 
-  const { AddItem } = CartActor({ actorId: cartActorId });
-  const { GetProduct } = ProductCatalog({ actorId: "product-catalog" });
+  const { AddItem } = CartActor({ id: cartId });
+  const { GetProduct } = ProductCatalog({ id: "product-catalog" });
   const [product, setProduct] = useState<pb_Product>();
 
   useEffect(() => {
