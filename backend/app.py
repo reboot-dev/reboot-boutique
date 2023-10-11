@@ -16,6 +16,7 @@ from resemble.boutique.api.demo_rsm import (
 from resemble.boutique.backend.cart.servicer import CartServicer
 from resemble.boutique.backend.checkout.servicer import CheckoutServicer
 from resemble.boutique.backend.constants import (
+    CART_ACTOR_ID,
     CHECKOUT_ACTOR_ID,
     EMAILER_ACTOR_ID,
     PRODUCT_CATALOG_ACTOR_ID,
@@ -52,8 +53,10 @@ async def initialize(workflow: Workflow):
     checkout = Checkout(CHECKOUT_ACTOR_ID)
     await checkout.Create(workflow)
 
-    product_catalog = ProductCatalog(PRODUCT_CATALOG_ACTOR_ID)
+    # cart = Cart(CART_ACTOR_ID)
+    # await cart.AddItem(item=demo_pb2.CartItem())
 
+    product_catalog = ProductCatalog(PRODUCT_CATALOG_ACTOR_ID)
     await product_catalog.LoadProducts(workflow)
 
 

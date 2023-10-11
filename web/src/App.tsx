@@ -10,7 +10,7 @@ import "./static/styles/cart.css";
 import "./static/styles/order.css";
 import "./static/styles/styles.css";
 
-const CART_ACTOR_ID = "my-cart";
+const CART_ACTOR_ID = "cart";
 
 const useChaosMonkey = (error: unknown | undefined) => {
   const [chaosMonkeyRestarts, setChaosMonkeyRestarts] = useState(0);
@@ -35,8 +35,10 @@ function App() {
     id: CART_ACTOR_ID,
   });
 
+  // AddItem({item: {productId: "OLJCESPC7Z", quantity: 1, addedAt: BigInt(Date.now()),}})
+
   useEffect(() => {
-    fetch("http://127.0.0.1:9991/get_supported_currencies")
+    fetch("https://localhost.direct:9991/get_supported_currencies")
       .then((res) => res.json())
       .then((json: { currencyCodes: string[] }) =>
         setCurrencies(json.currencyCodes)
