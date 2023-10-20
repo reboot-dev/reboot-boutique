@@ -69,9 +69,7 @@ function App() {
         />
         <Route
           path="cart"
-          element={
-            <Cart cartId={CART_ACTOR_ID} userCurrency={userCurrency} />
-          }
+          element={<Cart cartId={CART_ACTOR_ID} userCurrency={userCurrency} />}
         />
       </Routes>
       <Footer />

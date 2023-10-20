@@ -5,8 +5,8 @@ py_library(
     srcs = [
         "mailgun.py",
     ],
-    visibility = ["//resemble/boutique:__subpackages__"],
+    visibility = ["//resemble/examples/boutique:__subpackages__"],
     deps = [
-        "//resemble/boutique/api:demo_py_resemble",
+        "//resemble/examples/boutique/api:demo_py_resemble",
     ],
 )

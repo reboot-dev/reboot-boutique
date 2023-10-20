@@ -6,9 +6,9 @@ py_library(
     data = [
         "products.json",
     ],
-    visibility = ["//resemble/boutique:__subpackages__"],
+    visibility = ["//resemble/examples/boutique:__subpackages__"],
     deps = [
         "//resemble/aio:python",
-        "//resemble/boutique/api:demo_py_resemble",
+        "//resemble/examples/boutique/api:demo_py_resemble",
     ],
 )

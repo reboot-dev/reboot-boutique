@@ -3,31 +3,31 @@ load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 py_library(
     name = "constants_py",
     srcs = ["constants.py"],
-    visibility = ["//resemble/boutique:__subpackages__"],
+    visibility = ["//resemble/examples/boutique:__subpackages__"],
 )
 
 py_library(
     name = "logger_py",
     srcs = ["logger.py"],
-    visibility = ["//resemble/boutique:__subpackages__"],
+    visibility = ["//resemble/examples/boutique:__subpackages__"],
 )
 
 py_library(
     name = "app_py",
     srcs = ["app.py"],
-    visibility = ["//resemble/boutique:__subpackages__"],
+    visibility = ["//resemble/examples/boutique:__subpackages__"],
     deps = [
         "//resemble:rsm",
         "//resemble/aio:python",
-        "//resemble/boutique/api:demo_py_grpc",
-        "//resemble/boutique/backend:constants_py",
-        "//resemble/boutique/backend:logger_py",
-        "//resemble/boutique/backend/cart:servicer_py",
-        "//resemble/boutique/backend/checkout:servicer_py",
-        "//resemble/boutique/backend/currencyconverter:servicer_py",
-        "//resemble/boutique/backend/emailer:servicer_py",
-        "//resemble/boutique/backend/productcatalog:servicer_py",
-        "//resemble/boutique/backend/shipping:servicer_py",
+        "//resemble/examples/boutique/api:demo_py_grpc",
+        "//resemble/examples/boutique/backend:constants_py",
+        "//resemble/examples/boutique/backend:logger_py",
+        "//resemble/examples/boutique/backend/cart:servicer_py",
+        "//resemble/examples/boutique/backend/checkout:servicer_py",
+        "//resemble/examples/boutique/backend/currencyconverter:servicer_py",
+        "//resemble/examples/boutique/backend/emailer:servicer_py",
+        "//resemble/examples/boutique/backend/productcatalog:servicer_py",
+        "//resemble/examples/boutique/backend/shipping:servicer_py",
     ],
 )
 
@@ -35,7 +35,7 @@ py_binary(
     name = "app",
     srcs = ["app.py"],
     main = "app.py",
-    visibility = ["//resemble/boutique:__subpackages__"],
+    visibility = ["//resemble/examples/boutique:__subpackages__"],
     deps = [
         ":app_py",
     ],

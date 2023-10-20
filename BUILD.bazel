@@ -2,10 +2,10 @@ load("@com_github_reboot_dev_respect//resemble:rules.bzl", "ts_resemble_files_in
 
 ts_resemble_files_in_source_tree(
     name = "gen_ts",
-    srcs = ["//resemble/boutique/api:demo.proto"],
+    srcs = ["//resemble/examples/boutique/api:demo.proto"],
     write_path = "web/src/gen/demo_rsm_react.ts",
     deps = [
-        "//resemble/boutique/api:demo_proto",
+        "//resemble/examples/boutique/api:demo_proto",
         # We must unfortunately repeat the dependencies of `:greeter_proto`
         # AND all of the dependencies' dependencies also.
         # TODO(rjh): fix that.
