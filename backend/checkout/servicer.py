@@ -17,20 +17,20 @@ from resemble.aio.contexts import (
     TransactionContext,
     WriterContext,
 )
-from resemble.boutique.api import demo_pb2, demo_pb2_grpc
-from resemble.boutique.api.demo_rsm import (
+from resemble.examples.boutique.api import demo_pb2, demo_pb2_grpc
+from resemble.examples.boutique.api.demo_rsm import (
     Cart,
     Checkout,
     Emailer,
     ProductCatalog,
     Shipping,
 )
-from resemble.boutique.backend.constants import (
+from resemble.examples.boutique.backend.constants import (
     EMAILER_ACTOR_ID,
     PRODUCT_CATALOG_ACTOR_ID,
     SHIPPING_ACTOR_ID,
 )
-from resemble.boutique.backend.logger import logger
+from resemble.examples.boutique.backend.logger import logger
 
 
 class CheckoutServicer(Checkout.Interface):

@@ -7,12 +7,12 @@ py_library(
         "templates/order_confirmation.html",
         "templates/thanks_for_listening_to_demo.html",
     ],
-    visibility = ["//resemble/boutique:__subpackages__"],
+    visibility = ["//resemble/examples/boutique:__subpackages__"],
     deps = [
         "//resemble/aio:python",
-        "//resemble/boutique/api:demo_py_resemble",
-        "//resemble/boutique/backend:constants_py",
-        "//resemble/boutique/backend:logger_py",
+        "//resemble/examples/boutique/api:demo_py_resemble",
+        "//resemble/examples/boutique/backend:constants_py",
+        "//resemble/examples/boutique/backend:logger_py",
         "@com_github_reboot_dev_pyprotoc_plugin//pyprotoc_plugin",
     ],
 )
