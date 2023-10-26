@@ -6,29 +6,33 @@ from resemble.aio.applications import Application
 from resemble.aio.servicers import Serviceable, Servicer
 from resemble.aio.types import assert_type
 from resemble.aio.workflows import Workflow
-from resemble.boutique.api import demo_pb2, demo_pb2_grpc, demo_rsm
-from resemble.boutique.api.demo_rsm import (
+from resemble.examples.boutique.api import demo_pb2, demo_pb2_grpc, demo_rsm
+from resemble.examples.boutique.api.demo_rsm import (
     Cart,
     Checkout,
     Emailer,
     ProductCatalog,
 )
-from resemble.boutique.backend.cart.servicer import CartServicer
-from resemble.boutique.backend.checkout.servicer import CheckoutServicer
-from resemble.boutique.backend.constants import (
+from resemble.examples.boutique.backend.cart.servicer import CartServicer
+from resemble.examples.boutique.backend.checkout.servicer import (
+    CheckoutServicer,
+)
+from resemble.examples.boutique.backend.constants import (
     CHECKOUT_ACTOR_ID,
     EMAILER_ACTOR_ID,
     PRODUCT_CATALOG_ACTOR_ID,
 )
-from resemble.boutique.backend.currencyconverter.servicer import (
+from resemble.examples.boutique.backend.currencyconverter.servicer import (
     CurrencyConverterServicer,
 )
-from resemble.boutique.backend.emailer.servicer import MailgunServicer
-from resemble.boutique.backend.logger import logger
-from resemble.boutique.backend.productcatalog.servicer import (
+from resemble.examples.boutique.backend.emailer.servicer import MailgunServicer
+from resemble.examples.boutique.backend.logger import logger
+from resemble.examples.boutique.backend.productcatalog.servicer import (
     ProductCatalogServicer,
 )
-from resemble.boutique.backend.shipping.servicer import ShippingServicer
+from resemble.examples.boutique.backend.shipping.servicer import (
+    ShippingServicer,
+)
 from resemble.rsm import fail
 from respect.logging import formatter
 

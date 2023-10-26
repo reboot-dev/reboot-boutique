@@ -4,14 +4,14 @@ import os
 import unittest
 from resemble.aio.tests import Resemble
 from resemble.aio.workflows import Workflow
-from resemble.boutique.api import demo_pb2, demo_pb2_grpc
-from resemble.boutique.api.demo_rsm import Cart, Checkout, Shipping
-from resemble.boutique.backend.app import initialize, servicers
-from resemble.boutique.backend.constants import (
+from resemble.examples.boutique.api import demo_pb2, demo_pb2_grpc
+from resemble.examples.boutique.api.demo_rsm import Cart, Checkout, Shipping
+from resemble.examples.boutique.backend.app import initialize, servicers
+from resemble.examples.boutique.backend.constants import (
     CHECKOUT_ACTOR_ID,
     SHIPPING_ACTOR_ID,
 )
-from resemble.boutique.backend.currencyconverter.servicer import (
+from resemble.examples.boutique.backend.currencyconverter.servicer import (
     CurrencyConverterServicer,
 )
 
@@ -181,7 +181,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # TODO(rjh): remove the need for us to reach into the channel manager
         # and to pass an actor ID when reaching out to a plain gRPC service.
         async with self.workflow.channel_manager.get_channel_from_service_name(
-            'resemble.boutique.api.CurrencyConverter',
+            'resemble.examples.boutique.api.CurrencyConverter',
             actor_id='',
         ) as channel:
             stub = demo_pb2_grpc.CurrencyConverterStub(channel)

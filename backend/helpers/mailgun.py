@@ -2,7 +2,7 @@ import aiohttp
 import asyncio
 import random
 from abc import ABC, abstractmethod
-from resemble.boutique.api import demo_pb2
+from resemble.examples.boutique.api import demo_pb2
 from typing import Any, Optional
 
 

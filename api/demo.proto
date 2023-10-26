@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-package resemble.boutique.api;
+package resemble.examples.boutique.api;
 
 import "resemble/v1alpha1/options.proto";
 

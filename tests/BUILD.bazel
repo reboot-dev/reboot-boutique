@@ -6,14 +6,14 @@ py_test(
     main = "full_app_test.py",
     deps = [
         "//resemble/aio:python",
-        "//resemble/boutique/backend:app_py",
-        "//resemble/boutique/backend:constants_py",
-        "//resemble/boutique/backend/cart:servicer_py",
-        "//resemble/boutique/backend/checkout:servicer_py",
-        "//resemble/boutique/backend/currencyconverter:servicer_py",
-        "//resemble/boutique/backend/emailer:servicer_py",
-        "//resemble/boutique/backend/productcatalog:servicer_py",
-        "//resemble/boutique/backend/shipping:servicer_py",
+        "//resemble/examples/boutique/backend:app_py",
+        "//resemble/examples/boutique/backend:constants_py",
+        "//resemble/examples/boutique/backend/cart:servicer_py",
+        "//resemble/examples/boutique/backend/checkout:servicer_py",
+        "//resemble/examples/boutique/backend/currencyconverter:servicer_py",
+        "//resemble/examples/boutique/backend/emailer:servicer_py",
+        "//resemble/examples/boutique/backend/productcatalog:servicer_py",
+        "//resemble/examples/boutique/backend/shipping:servicer_py",
     ],
 )
 
@@ -23,9 +23,9 @@ py_test(
     main = "cart_test.py",
     deps = [
         "//resemble/aio:python",
-        "//resemble/boutique/backend:app_py",
-        "//resemble/boutique/backend:constants_py",
-        "//resemble/boutique/backend/cart:servicer_py",
+        "//resemble/examples/boutique/backend:app_py",
+        "//resemble/examples/boutique/backend:constants_py",
+        "//resemble/examples/boutique/backend/cart:servicer_py",
     ],
 )
 
@@ -35,8 +35,8 @@ py_test(
     main = "emailer_test.py",
     deps = [
         "//resemble/aio:python",
-        "//resemble/boutique/backend:app_py",
-        "//resemble/boutique/backend:constants_py",
-        "//resemble/boutique/backend/emailer:servicer_py",
+        "//resemble/examples/boutique/backend:app_py",
+        "//resemble/examples/boutique/backend:constants_py",
+        "//resemble/examples/boutique/backend/emailer:servicer_py",
     ],
 )
