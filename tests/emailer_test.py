@@ -29,7 +29,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # Since we are using the 'real' servicers, they are setting Mailgun with
         # a key provided as ENV variable, so need to set one.
         os.environ['MAILGUN_API_KEY'] = 'some Mailgun key'
-        workflow: Workflow = self.rsm.create_workflow(name=self.id())
+        workflow: Workflow = self.rsm.create_workflow(name=f"test-{self.id()}")
 
         RECEIVER = "team@reboot.dev"
         DOMAIN = "reboot.dev"
