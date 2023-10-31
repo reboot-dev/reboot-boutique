@@ -22,7 +22,9 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         self.rsm = Resemble()
         self.config = await self.rsm.up(servicers=servicers)
 
-        self.workflow: Workflow = self.rsm.create_workflow(name=self.id())
+        self.workflow: Workflow = self.rsm.create_workflow(
+            name=f"test-{self.id()}"
+        )
 
         os.environ['MAILGUN_API_KEY'] = 'potato'
 
