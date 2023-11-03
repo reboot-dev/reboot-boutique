@@ -17,8 +17,8 @@ py_library(
     srcs = ["app.py"],
     visibility = ["//resemble/examples/boutique:__subpackages__"],
     deps = [
-        "//resemble:rsm",
         "//resemble/aio:python",
+        "//resemble/cli:rsm",
         "//resemble/examples/boutique/api:demo_py_grpc",
         "//resemble/examples/boutique/backend:constants_py",
         "//resemble/examples/boutique/backend:logger_py",

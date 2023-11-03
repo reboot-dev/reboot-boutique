@@ -6,6 +6,7 @@ from resemble.aio.applications import Application
 from resemble.aio.servicers import Serviceable, Servicer
 from resemble.aio.types import assert_type
 from resemble.aio.workflows import Workflow
+from resemble.cli.terminal import fail
 from resemble.examples.boutique.api import demo_pb2, demo_pb2_grpc, demo_rsm
 from resemble.examples.boutique.api.demo_rsm import (
     Cart,
@@ -33,7 +34,6 @@ from resemble.examples.boutique.backend.productcatalog.servicer import (
 from resemble.examples.boutique.backend.shipping.servicer import (
     ShippingServicer,
 )
-from resemble.rsm import fail
 from respect.logging import formatter
 
 # All of the servicers that we need to run!
