@@ -2,6 +2,7 @@ import os
 import unittest
 from resemble.aio.tests import Resemble
 from resemble.aio.workflows import Workflow
+from resemble.cli.terminal import fail
 from resemble.examples.boutique.api import demo_pb2
 from resemble.examples.boutique.api.demo_rsm import Emailer
 from resemble.examples.boutique.backend.constants import EMAILER_ACTOR_ID
@@ -12,7 +13,6 @@ from resemble.examples.boutique.backend.helpers.mailgun import (
     MailgunAPIError,
     MockMailgunAPI,
 )
-from resemble.rsm import fail
 from typing import Dict, Optional
 from unittest import mock
 
