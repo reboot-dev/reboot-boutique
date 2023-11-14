@@ -25,7 +25,7 @@ export const convertedShippingCost = async (
     description: "this is the wrong api",
     price: cost,
   };
-  const response = await fetch("http://127.0.0.1:9991/convert", {
+  const response = await fetch("https://localhost.direct:9991/convert", {
     method: "POST",
     body: JSON.stringify({
       products: [fakeProduct],
@@ -51,7 +51,7 @@ export const useCurrencyConvertProductItems = (
     if (userCurrency === "USD") {
       setConvertedProductItems(productItems);
     } else {
-      fetch("http://127.0.0.1:9991/convert", {
+      fetch("https://localhost.direct:9991/convert", {
         method: "POST",
         body: JSON.stringify({
           products: productItems.map(
@@ -94,7 +94,7 @@ export const useCurrencyConvertProducts = (
     if (userCurrency === "USD") {
       setConvertedProducts(products);
     } else {
-      fetch("http://127.0.0.1:9991/convert", {
+      fetch("https://localhost.direct:9991/convert", {
         method: "POST",
         body: JSON.stringify({
           products: products,

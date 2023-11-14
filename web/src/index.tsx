@@ -1,17 +1,18 @@
-import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
-import App from "./App";
 import {
   ResembleClient,
   ResembleClientProvider,
-} from "./ResembleClientProvider";
+} from "@reboot-dev/resemble-react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
-const client = new ResembleClient("http://127.0.0.1:9991");
+
+const client = new ResembleClient("https://localhost.direct:9991");
 
 root.render(
   <ResembleClientProvider client={client}>
