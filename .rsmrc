@@ -1,0 +1,24 @@
+### Backend flags ###
+# The following `dev` commands are sufficient to run the full backend of this
+# app locally.
+
+# Run the backend in the current directory.
+dev --working-directory=.
+
+# Don't cause chaos; it makes it hard to play with the API with e.g. `grpcurl`
+# if that API is constantly going down and coming back up.
+dev --no-chaos
+
+# Use ibazel to rebuild the application on changes.
+dev --background-command="ibazel build //resemble/examples/boutique/backend:app_zip"
+dev --background-command="ibazel run //resemble/examples/boutique:gen_ts"
+
+# Bazel is doing the protobuf building; no need for `rsm protoc`.
+dev --no-protoc-watch
+
+# The application requires a `MAILGUN_API_KEY`; we normally don't need it to
+# play with the application though.
+dev --env=MAILGUN_API_KEY=bogus
+
+# The application gets built into bazel-bin.
+dev ../../../bazel-bin/resemble/examples/boutique/backend/app.zip

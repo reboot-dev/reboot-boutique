@@ -36,7 +36,7 @@ function App() {
   });
 
   useEffect(() => {
-    fetch("http://127.0.0.1:9991/get_supported_currencies")
+    fetch("https://localhost.direct:9991/get_supported_currencies")
       .then((res) => res.json())
       .then((json: { currencyCodes: string[] }) =>
         setCurrencies(json.currencyCodes)
