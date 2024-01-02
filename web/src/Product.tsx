@@ -1,5 +1,5 @@
 import { Product as pb_Product } from "gen/demo_pb";
-import { Cart as CartActor, ProductCatalog } from "gen/demo_rsm_react";
+import { useCart, useProductCatalog } from "gen/demo_rsm_react";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -18,12 +18,14 @@ export const Product = ({ cartId, userCurrency }: ProductProps) => {
   const navigate = useNavigate();
   const [selectedQuantity, setSelectedQuantity] = useState("1");
 
-  const { AddItem } = CartActor({ id: cartId });
-  const { GetProduct } = ProductCatalog({ id: "product-catalog" });
+  const {
+    mutators: { addItem },
+  } = useCart({ id: cartId });
+  const { getProduct } = useProductCatalog({ id: "product-catalog" });
   const [product, setProduct] = useState<pb_Product>();
 
   useEffect(() => {
-    const response = GetProduct({ id: productId });
+    const response = getProduct({ id: productId });
     response.then((product: pb_Product) => {
       setProduct(product);
     });
@@ -37,7 +39,7 @@ export const Product = ({ cartId, userCurrency }: ProductProps) => {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      await AddItem({
+      await addItem({
         item: {
           productId: productEntry.item.id,
           quantity: +selectedQuantity,
