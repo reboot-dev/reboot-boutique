@@ -7,10 +7,10 @@ import {
   ShippingQuote,
 } from "gen/demo_pb";
 import {
-  Cart as CartActor,
-  Checkout,
-  ProductCatalog,
-  Shipping,
+  useCart,
+  useCheckout,
+  useProductCatalog,
+  useShipping,
 } from "gen/demo_rsm_react";
 import {
   ProductItem,
@@ -40,12 +40,13 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
   const [shippingCost, setShippingCost] = useState<Money>(new Money());
   const [shippingQuote, setShippingQuote] = useState<ShippingQuote>();
   const [email, setEmail] = useState("someone@example.com");
-  const { GetProduct } = ProductCatalog({ id: "product-catalog" });
-  const { GetQuote } = Shipping({ id: "shipping" });
-  const { useOrders } = Checkout({ id: "checkout" });
-  const { useGetItems, EmptyCart } = CartActor({
-    id: cartId,
-  });
+  const { getProduct } = useProductCatalog({ id: "product-catalog" });
+  const { getQuote } = useShipping({ id: "shipping" });
+  const { useOrders } = useCheckout({ id: "checkout" });
+  const {
+    useGetItems,
+    mutators: { emptyCart },
+  } = useCart({ id: cartId });
 
   const {
     response: useOrdersResponse,
@@ -58,7 +59,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
   useEffect(() => {
     if (useGetItemsResponse !== undefined) {
       for (const cartItem of useGetItemsResponse.items) {
-        const product = GetProduct({ id: cartItem.productId });
+        const product = getProduct({ id: cartItem.productId });
 
         product.then((productDetails) => {
           if (productDetails !== undefined && cartItem !== undefined) {
@@ -77,7 +78,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
         });
       }
 
-      const quote = GetQuote({
+      const quote = getQuote({
         address: USER_ADDRESS,
         items: useGetItemsResponse.items,
         quoteExpirationSeconds: 5000,
@@ -160,7 +161,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
                   <div className="col-8 pr-md-0 text-right">
                     <button
                       className="cymbal-button-secondary cart-summary-empty-cart-button"
-                      onClick={EmptyCart}
+                      onClick={emptyCart}
                     >
                       Empty Cart
                     </button>
@@ -399,7 +400,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
           </section>
         )}
         <PastOrders
-          getProduct={GetProduct}
+          getProduct={getProduct}
           response={useOrdersResponse}
           userCurrency={userCurrency}
           pendingPlaceOrderMutations={pendingPlaceOrderMutations}

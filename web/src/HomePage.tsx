@@ -1,4 +1,4 @@
-import { ProductCatalog } from "gen/demo_rsm_react";
+import { useProductCatalog } from "gen/demo_rsm_react";
 import { Link } from "react-router-dom";
 import {
   ProductEntry,
@@ -12,9 +12,7 @@ interface HomePageProps {
 }
 
 const HomePage = ({ userCurrency }: HomePageProps) => {
-  const { useListProducts } = ProductCatalog({
-    id: "product-catalog",
-  });
+  const { useListProducts } = useProductCatalog({ id: "product-catalog" });
 
   const { response } = useListProducts();
   const products = useCurrencyConvertProducts(response?.products, userCurrency);
