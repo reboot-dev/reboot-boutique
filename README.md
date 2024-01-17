@@ -1,6 +1,6 @@
 # Resemble <-> React Example
 
-This directory is meant to bootstrap a fullstack, Resemble applications.
+This directory is meant to bootstrap a fullstack, Resemble application.
 
 ## Steps to Create a New Fullstack App
 
