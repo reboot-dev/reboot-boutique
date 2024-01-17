@@ -20,6 +20,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
 
     async def asyncSetUp(self) -> None:
         self.rsm = Resemble()
+        await self.rsm.start()
         self.config = await self.rsm.up(servicers=servicers)
 
         self.workflow: Workflow = self.rsm.create_workflow(
@@ -31,7 +32,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         await initialize(self.workflow)
 
     async def asyncTearDown(self) -> None:
-        await self.rsm.down()
+        await self.rsm.stop()
 
     async def test_checkout(self) -> None:
         """Check out a single item successfully."""
