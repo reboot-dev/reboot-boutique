@@ -5,12 +5,11 @@ from datetime import timedelta
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from resemble.aio.contexts import ReaderContext, WriterContext
 from resemble.examples.boutique.api import demo_pb2
-from resemble.examples.boutique.api.demo_rsm import Cart, Emailer
+from resemble.examples.boutique.api.demo_rsm import Cart
 # Import the whole `mailgun` module, and not only the
 # `mailgun.send_email_idempotently` method, so that tests can still
 # mock `mailgun.send_email_idempotently` for us.
 from resemble.examples.boutique.backend.helpers import mailgun
-from typing import Optional
 
 
 class CartServicer(Cart.Interface):

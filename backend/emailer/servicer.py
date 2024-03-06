@@ -1,15 +1,5 @@
-import aiohttp
-import asyncio
-import json
 import os
-import requests
 import uuid
-from jinja2 import (
-    Environment,
-    FileSystemLoader,
-    TemplateError,
-    select_autoescape,
-)
 from resemble.aio.contexts import ReaderContext, WriterContext
 from resemble.aio.tasks import TaskEffect
 from resemble.examples.boutique.api import demo_pb2
@@ -17,7 +7,7 @@ from resemble.examples.boutique.api.demo_rsm import Emailer
 # Import the whole `mailgun` module, and not only the `mailgun.send_email`
 # method, so that tests can still mock `mailgun.send_email` for us.
 from resemble.examples.boutique.backend.helpers import mailgun
-from typing import Any, Optional
+from typing import Optional
 
 
 class MailgunServicer(Emailer.Interface):

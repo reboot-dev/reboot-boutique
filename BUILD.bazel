@@ -1,19 +1,9 @@
-load("@com_github_reboot_dev_respect//resemble:rules.bzl", "ts_resemble_files_in_source_tree")
+load("@com_github_reboot_dev_respect//resemble:rules.bzl", "write_merged_source_files")
 
-ts_resemble_files_in_source_tree(
+write_merged_source_files(
     name = "gen_ts",
-    srcs = ["//resemble/examples/boutique/api:demo.proto"],
-    write_path = "web/src/gen/demo_rsm_react.ts",
-    deps = [
-        "//resemble/examples/boutique/api:demo_proto",
-        # We must unfortunately repeat the dependencies of `:greeter_proto`
-        # AND all of the dependencies' dependencies also.
-        # TODO(rjh): fix that.
-        "//resemble/v1alpha1:options_proto",
-        "//resemble/v1alpha1:tasks_proto",
-        "@com_google_protobuf//:timestamp_proto",
-        "@googleapis//google/api:annotations_proto",
-        "@googleapis//google/api:http_proto",
-        "@com_google_protobuf//:descriptor_proto",
-    ],
+    srcs = ["//resemble/examples/boutique/api:demo_py_resemble"],
+    # These files are not committed.
+    diff_test = False,
+    write_path = "web/src/gen",
 )
