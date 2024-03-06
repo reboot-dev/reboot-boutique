@@ -52,8 +52,6 @@ py_resemble_library(
     deps = [
         ":demo_py_grpc",
         ":demo_py_proto",
-        "//resemble/aio:python",
-        "//resemble/aio/internals:python",
     ],
 )
 

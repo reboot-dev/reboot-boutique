@@ -2,8 +2,7 @@ import aiohttp
 import asyncio
 import random
 from abc import ABC, abstractmethod
-from resemble.examples.boutique.api import demo_pb2
-from typing import Any, Optional
+from typing import Optional
 
 
 class MailgunAPIError(RuntimeError):
@@ -203,9 +202,7 @@ class MockMailgunAPI(_AbstractMailgunAPI):
         if idempotency_key is not None:
             self.last_idempotency_key = idempotency_key
         if (recipient, idempotency_key) not in self.emails_sent:
-            asyncio.create_task(
-                self.wait_and_append(recipient, idempotency_key)
-            )
+            await self.wait_and_append(recipient, idempotency_key)
 
     async def is_email_with_idempotency_key_sent_to_recipient(
         self,

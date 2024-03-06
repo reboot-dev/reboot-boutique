@@ -55,7 +55,7 @@ class ShippingServicer(Shipping.Interface):
             i += 1
 
         if not valid_quote:
-            raise Shipping.PrepareShipOrderError(
+            raise Shipping.PrepareShipOrderAborted(
                 demo_pb2.ShippingQuoteInvalidOrExpired()
             )
 

@@ -1,6 +1,7 @@
 import datetime
 import os
 import unittest
+import unittest.mock
 from resemble.aio.tests import Resemble
 from resemble.aio.workflows import Workflow
 from resemble.examples.boutique.api import demo_pb2
@@ -9,7 +10,6 @@ from resemble.examples.boutique.backend.cart.servicer import CartServicer
 # We must import ONLY the method, so that when our test mocks this method later
 # it can still call the original method.
 from resemble.examples.boutique.backend.helpers.mailgun import MockMailgunAPI
-from unittest import mock
 
 
 class TestCase(unittest.IsolatedAsyncioTestCase):

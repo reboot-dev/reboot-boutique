@@ -1,5 +1,4 @@
 import asyncio
-import grpc
 import os
 import unittest
 from resemble.aio.tests import Resemble
@@ -10,9 +9,6 @@ from resemble.examples.boutique.backend.app import initialize, servicers
 from resemble.examples.boutique.backend.constants import (
     CHECKOUT_ACTOR_ID,
     SHIPPING_ACTOR_ID,
-)
-from resemble.examples.boutique.backend.currencyconverter.servicer import (
-    CurrencyConverterServicer,
 )
 
 
@@ -120,8 +116,8 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # gone through.
         checkout = Checkout(CHECKOUT_ACTOR_ID)
 
-        with self.assertRaises(Checkout.PlaceOrderError) as raised:
-            place_order_response = await checkout.PlaceOrder(
+        with self.assertRaises(Checkout.PlaceOrderAborted) as aborted:
+            await checkout.PlaceOrder(
                 self.workflow,
                 user_id='jonathan',
                 user_currency='USD',
@@ -129,16 +125,8 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
                 quote=get_quote_response.quote,
             )
 
-        self.assertTrue(
-            isinstance(
-                raised.exception.detail,
-                demo_pb2.ShippingQuoteInvalidOrExpired,
-            )
-        )
-
-        self.assertEquals(
-            raised.exception.message,
-            "Error in 'Checkout.PlaceOrder': Error in 'Shipping.PrepareShipOrder'",
+        self.assertIsInstance(
+            aborted.exception.error, demo_pb2.ShippingQuoteInvalidOrExpired
         )
 
     async def test_currency_conversion(self) -> None:

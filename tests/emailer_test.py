@@ -1,9 +1,8 @@
 import os
 import unittest
+import unittest.mock
 from resemble.aio.tests import Resemble
 from resemble.aio.workflows import Workflow
-from resemble.cli.terminal import fail
-from resemble.examples.boutique.api import demo_pb2
 from resemble.examples.boutique.api.demo_rsm import Emailer
 from resemble.examples.boutique.backend.constants import EMAILER_ACTOR_ID
 from resemble.examples.boutique.backend.emailer.servicer import MailgunServicer
@@ -13,8 +12,6 @@ from resemble.examples.boutique.backend.helpers.mailgun import (
     MailgunAPIError,
     MockMailgunAPI,
 )
-from typing import Dict, Optional
-from unittest import mock
 
 
 class TestCase(unittest.IsolatedAsyncioTestCase):
@@ -57,7 +54,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
 
             await real_send_email(self, *args, **kwargs)
 
-            if unexpected_raise == True:
+            if unexpected_raise is True:
                 unexpected_raise = False
                 raise MailgunAPIError("Ooops, some error, retry the task!")
 

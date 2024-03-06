@@ -10,6 +10,9 @@ py_library(
     name = "logger_py",
     srcs = ["logger.py"],
     visibility = ["//resemble/examples/boutique:__subpackages__"],
+    deps = [
+        "//respect:logging_py",
+    ],
 )
 
 py_library(

@@ -1,17 +1,6 @@
-import asyncio
-import grpc
-import json
 import os
-import sys
-import time
 import uuid
-from jinja2 import (
-    Environment,
-    FileSystemLoader,
-    TemplateError,
-    select_autoescape,
-)
-from pyprotoc_plugin.helpers import add_template_path, load_template
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from resemble.aio.contexts import (
     ReaderContext,
     TransactionContext,
@@ -26,7 +15,6 @@ from resemble.examples.boutique.api.demo_rsm import (
     Shipping,
 )
 from resemble.examples.boutique.backend.constants import (
-    EMAILER_ACTOR_ID,
     PRODUCT_CATALOG_ACTOR_ID,
     SHIPPING_ACTOR_ID,
 )
@@ -132,10 +120,7 @@ class CheckoutServicer(Checkout.Interface):
         )
         template = env.get_template('thanks_for_listening_to_demo.html')
 
-        try:
-            confirmation = template.render(order=order_result)
-        except TemplateError as err:
-            pass
+        confirmation = template.render(order=order_result)
 
         # Get the actor_id of mailgun service from the state.
         state = await self.read(context)
