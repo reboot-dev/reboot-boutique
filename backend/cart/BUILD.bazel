@@ -11,6 +11,7 @@ py_library(
     visibility = ["//resemble/examples/boutique:__subpackages__"],
     deps = [
         "//resemble/examples/boutique/api:demo_py_resemble",
-        "//resemble/examples/boutique/backend/helpers:mailgun_py",
+        "//resemble/integrations/mailgun:servicers_py",
+        "//resemble/integrations/mailgun/v1:mailgun_py_resemble",
     ],
 )

@@ -115,7 +115,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
   const placeOrder = async () => {
     // This error is an error that we know about in the backend.
     // For any other error type, just throw.
-    const { error } = await PlaceOrder(
+    const { aborted } = await PlaceOrder(
       {
         userId: cartId,
         userCurrency: userCurrency,
@@ -131,8 +131,8 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
       },
       { convertedProductItems }
     );
-    if (error !== undefined) {
-      console.log(error);
+    if (aborted !== undefined) {
+      console.log(aborted);
     }
   };
 
