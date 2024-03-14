@@ -1,15 +1,7 @@
-import os
 import time
-import uuid
-from datetime import timedelta
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 from resemble.aio.contexts import ReaderContext, WriterContext
 from resemble.examples.boutique.api import demo_pb2
 from resemble.examples.boutique.api.demo_rsm import Cart
-# Import the whole `mailgun` module, and not only the
-# `mailgun.send_email_idempotently` method, so that tests can still
-# mock `mailgun.send_email_idempotently` for us.
-from resemble.examples.boutique.backend.helpers import mailgun
 
 
 class CartServicer(Cart.Interface):
@@ -26,19 +18,18 @@ class CartServicer(Cart.Interface):
         request.item.added_at = now
         state.items.append(request.item)
 
-        email_reminder_task = self.schedule(
-            timedelta(minutes=2.),
-        ).EmailReminderTask(
-            context,
-            time_of_item_add=now,
-        )
+        # Re-enable email reminder after we support tasks in transactions.
+        # See https://github.com/reboot-dev/respect/issues/2550
+        # email_reminder_task = self.schedule(
+        #     timedelta(minutes=2.),
+        # ).EmailReminderTask(
+        #     context,
+        #     time_of_item_add=now,
+        # )
 
         return Cart.AddItemEffects(
             response=demo_pb2.Empty(),
             state=state,
-            tasks=[
-                email_reminder_task,
-            ]
         )
 
     async def GetItems(
@@ -59,46 +50,4 @@ class CartServicer(Cart.Interface):
         return Cart.EmptyCartEffects(
             response=demo_pb2.Empty(),
             state=state,
-        )
-
-    async def EmailReminderTask(
-        self,
-        context: WriterContext,
-        state: demo_pb2.CartState,
-        request: demo_pb2.EmailReminderTaskRequest,
-    ) -> demo_pb2.EmailReminderTaskResponse:
-        if (len(state.items) != 0):
-            last_item_added_at = max([item.added_at for item in state.items])
-
-            if request.time_of_item_add == last_item_added_at:
-                await self._send_email_reminder(context, str(uuid.uuid4()))
-
-        return Cart.EmailReminderTaskEffects(
-            response=demo_pb2.EmailReminderTaskResponse(),
-            state=state,
-        )
-
-    async def _send_email_reminder(
-        self, context: WriterContext, mail_id: str
-    ) -> None:
-        # Use a template in the 'templates' folder.
-        env = Environment(
-            loader=FileSystemLoader(
-                os.path.join(os.path.dirname(__file__), 'templates')
-            ),
-            autoescape=select_autoescape(['html', 'xml'])
-        )
-        template = env.get_template('cart_reminder.html')
-        confirmation = template.render()
-
-        await mailgun.Mailgun(
-            os.environ['MAILGUN_API_KEY'].strip(),
-        ).send_email_idempotently(
-            sender='hipsterstore@reboot.dev',
-            recipient='team@reboot.dev',
-            subject='You still have items in your cart.',
-            domain='reboot.dev',
-            idempotency_key=mail_id,
-            body=confirmation,
-            body_type='html',
         )

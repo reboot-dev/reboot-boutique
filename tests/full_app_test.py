@@ -1,29 +1,68 @@
 import asyncio
-import os
 import unittest
+from resemble.aio.secrets import MockSecretSource, Secrets
 from resemble.aio.tests import Resemble
 from resemble.aio.workflows import Workflow
 from resemble.examples.boutique.api import demo_pb2, demo_pb2_grpc
 from resemble.examples.boutique.api.demo_rsm import Cart, Checkout, Shipping
-from resemble.examples.boutique.backend.app import initialize, servicers
+from resemble.examples.boutique.backend.app import initialize
+from resemble.examples.boutique.backend.cart.servicer import CartServicer
+from resemble.examples.boutique.backend.checkout.servicer import (
+    CheckoutServicer,
+)
 from resemble.examples.boutique.backend.constants import (
     CHECKOUT_ACTOR_ID,
     SHIPPING_ACTOR_ID,
 )
+from resemble.examples.boutique.backend.currencyconverter.servicer import (
+    CurrencyConverterServicer,
+)
+from resemble.examples.boutique.backend.productcatalog.servicer import (
+    ProductCatalogServicer,
+)
+from resemble.examples.boutique.backend.shipping.servicer import (
+    ShippingServicer,
+)
+from resemble.integrations.mailgun.servicers import (
+    MAILGUN_API_KEY_SECRET_NAME,
+    MockMessageServicer,
+)
+
+# Any arbitrary mailgun API key works for the `MockMessageServicer`.
+MAILGUN_API_KEY = 'S3CR3T!'
 
 
 class TestCase(unittest.IsolatedAsyncioTestCase):
 
     async def asyncSetUp(self) -> None:
+        Secrets.set_secret_source(
+            MockSecretSource(
+                {
+                    MAILGUN_API_KEY_SECRET_NAME: MAILGUN_API_KEY.encode(),
+                }
+            )
+        )
+
         self.rsm = Resemble()
+        servicers: list[type] = [
+            ProductCatalogServicer,
+            CartServicer,
+            CheckoutServicer,
+            ShippingServicer,
+            MockMessageServicer,
+            CurrencyConverterServicer,
+        ]
+
         await self.rsm.start()
-        self.config = await self.rsm.up(servicers=servicers)
+        self.config = await self.rsm.up(
+            servicers=servicers,
+            # Mocking `Secrets` requires running in process.
+            in_process=True,
+        )
 
         self.workflow: Workflow = self.rsm.create_workflow(
             name=f"test-{self.id()}"
         )
-
-        os.environ['MAILGUN_API_KEY'] = 'potato'
 
         await initialize(self.workflow)
 
@@ -59,6 +98,10 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
             email='hi@reboot.dev',
             quote=get_quote_response.quote,
         )
+
+        # The user should receive an email after placing the order.
+        await MockMessageServicer.emails_sent_sema.acquire()
+        self.assertEqual(1, len(MockMessageServicer.emails_sent))
 
         self.assertTrue(place_order_response.HasField('order'))
 

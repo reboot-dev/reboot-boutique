@@ -28,9 +28,9 @@ py_library(
         "//resemble/examples/boutique/backend/cart:servicer_py",
         "//resemble/examples/boutique/backend/checkout:servicer_py",
         "//resemble/examples/boutique/backend/currencyconverter:servicer_py",
-        "//resemble/examples/boutique/backend/emailer:servicer_py",
         "//resemble/examples/boutique/backend/productcatalog:servicer_py",
         "//resemble/examples/boutique/backend/shipping:servicer_py",
+        "//resemble/integrations/mailgun:servicers_py",
     ],
 )
 

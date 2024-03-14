@@ -47,20 +47,7 @@ service Cart {
     option (.resemble.v1alpha1.method).writer = {
     };
   }
-
-  rpc EmailReminderTask(EmailReminderTaskRequest)
-      returns (EmailReminderTaskResponse) {
-    option (.resemble.v1alpha1.method) = {
-      writer: {},
-      task: true,
-    };
-  }
 }
-
-message EmailReminderTaskRequest {
-  uint64 time_of_item_add = 1;
-}
-message EmailReminderTaskResponse {}
 
 message CartState {
   repeated CartItem items = 1;
@@ -297,64 +284,6 @@ message ChargeResponse {
   string transaction_id = 1;
 }
 
-// -------------Emailer service-----------------
-
-service Emailer {
-  option (.resemble.v1alpha1.service).state = "EmailerState";
-
-  rpc PrepareSendEmail(PrepareSendEmailRequest)
-      returns (PrepareSendEmailResponse) {
-    option (.resemble.v1alpha1.method).writer = {
-    };
-  }
-
-  rpc SendEmailTask(SendEmailTaskRequest) returns (SendEmailTaskResponse) {
-    option (.resemble.v1alpha1.method) = {
-      // NOTE: this is a reader because currently it is not updating
-      // any state and if it is a writer than it potentially blocks
-      // any other writers from executing which slows the `PlaceOrder`
-      // transaction that needs to call `PrepareSendEmail`.
-      reader: {},
-      task: true,
-    };
-  }
-}
-
-message EmailerState {}
-
-message PrepareSendEmailRequest {
-  string recipient = 1;
-  string sender = 2;
-  string subject = 3;
-  oneof body {
-    string text = 4;
-    string html = 5;
-  }
-}
-
-message PrepareSendEmailResponse {
-  optional TaskId email_task = 2;
-};
-
-message SendEmailTaskRequest {
-  PrepareSendEmailRequest request = 1;
-  string id = 2;
-}
-
-message SendEmailTaskResponse {}
-
-message OrderItem {
-  CartItem item = 1;
-  Money cost = 2;
-}
-
-message OrderResult {
-  string order_id = 1;
-  Money shipping_cost = 2;
-  Address shipping_address = 3;
-  repeated OrderItem items = 4;
-}
-
 // -------------Checkout service-----------------
 
 service Checkout {
@@ -378,8 +307,19 @@ service Checkout {
   }
 }
 
+message OrderItem {
+  CartItem item = 1;
+  Money cost = 2;
+}
+
+message OrderResult {
+  string order_id = 1;
+  Money shipping_cost = 2;
+  Address shipping_address = 3;
+  repeated OrderItem items = 4;
+}
+
 message CheckoutState {
-  string emailer_id = 1;
   repeated OrderResult orders = 3;
 }
 

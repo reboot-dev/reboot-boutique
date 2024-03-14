@@ -12,16 +12,16 @@ import "./static/styles/styles.css";
 
 const CART_ACTOR_ID = "my-cart";
 
-const useChaosMonkey = (error: unknown | undefined) => {
+const useChaosMonkey = (aborted: unknown | undefined) => {
   const [chaosMonkeyRestarts, setChaosMonkeyRestarts] = useState(0);
-  const previousErrorState = useRef<unknown | undefined>();
+  const previousAbortedState = useRef<unknown | undefined>();
 
-  if (previousErrorState.current === undefined && error !== undefined) {
-    previousErrorState.current = error;
+  if (previousAbortedState.current === undefined && aborted !== undefined) {
+    previousAbortedState.current = aborted;
   }
-  if (previousErrorState.current !== undefined && error === undefined) {
+  if (previousAbortedState.current !== undefined && aborted === undefined) {
     setChaosMonkeyRestarts(chaosMonkeyRestarts + 1);
-    previousErrorState.current = undefined;
+    previousAbortedState.current = undefined;
   }
 
   return chaosMonkeyRestarts;
@@ -42,9 +42,9 @@ function App() {
       .catch((error: unknown) => console.log(error));
   }, []);
 
-  const { response, error } = useGetItems();
+  const { response, aborted } = useGetItems();
 
-  const chaosMonkeyRestarts = useChaosMonkey(error);
+  const chaosMonkeyRestarts = useChaosMonkey(aborted);
 
   return (
     <>

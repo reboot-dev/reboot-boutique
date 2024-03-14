@@ -6,11 +6,11 @@ from resemble.aio.contexts import (
     TransactionContext,
     WriterContext,
 )
+from resemble.aio.secrets import Secrets
 from resemble.examples.boutique.api import demo_pb2, demo_pb2_grpc
 from resemble.examples.boutique.api.demo_rsm import (
     Cart,
     Checkout,
-    Emailer,
     ProductCatalog,
     Shipping,
 )
@@ -19,9 +19,14 @@ from resemble.examples.boutique.backend.constants import (
     SHIPPING_ACTOR_ID,
 )
 from resemble.examples.boutique.backend.logger import logger
+from resemble.integrations.mailgun.servicers import MAILGUN_API_KEY_SECRET_NAME
+from resemble.integrations.mailgun.v1.mailgun_rsm import Message
 
 
 class CheckoutServicer(Checkout.Interface):
+
+    def __init__(self):
+        self._secrets = Secrets()
 
     async def Create(
         self,
@@ -37,8 +42,6 @@ class CheckoutServicer(Checkout.Interface):
         context: TransactionContext,
         request: demo_pb2.PlaceOrderRequest,
     ) -> demo_pb2.PlaceOrderResponse:
-        state = await self.read(context)
-
         # Get user cart.
         cart = Cart(request.user_id)
 
@@ -121,13 +124,16 @@ class CheckoutServicer(Checkout.Interface):
         template = env.get_template('thanks_for_listening_to_demo.html')
 
         confirmation = template.render(order=order_result)
+        mailgun_api_key = await self._secrets.get(MAILGUN_API_KEY_SECRET_NAME)
 
-        # Get the actor_id of mailgun service from the state.
-        state = await self.read(context)
-        await Emailer(state.emailer_id).PrepareSendEmail(
+        await Message(
+            str(uuid.uuid4()),
+            bearer_token=mailgun_api_key.decode(),
+        ).Send(
             context,
             recipient=request.email,
             sender='Reboot Team <team@reboot.dev>',
+            domain='reboot.dev',
             subject='Thanks from the team at reboot.dev!',
             html=confirmation,
         )
