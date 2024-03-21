@@ -100,7 +100,7 @@ service ProductCatalog {
 
   rpc LoadProducts(Empty) returns (Empty) {
     option (.resemble.v1alpha1.method).writer = {
-      constructor: true,
+      constructor: {},
     };
   }
   rpc ListProducts(Empty) returns (ListProductsResponse) {
@@ -173,13 +173,13 @@ service Shipping {
   rpc ExpireQuoteTask(ExpireQuoteTaskRequest) returns (Empty) {
     option (.resemble.v1alpha1.method) = {
       writer: {},
-      task: true,
+      task: {},
     };
   }
   rpc ShipOrderTask(ShipOrderTaskRequest) returns (Empty) {
     option (.resemble.v1alpha1.method) = {
       reader: {},
-      task: true,
+      task: {},
     };
   }
 }
@@ -290,7 +290,7 @@ service Checkout {
   option (.resemble.v1alpha1.service).state = "CheckoutState";
   rpc Create(Empty) returns (Empty) {
     option (.resemble.v1alpha1.method).writer = {
-      constructor: true
+      constructor: {},
     };
   }
 

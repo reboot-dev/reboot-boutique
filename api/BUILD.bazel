@@ -13,6 +13,7 @@ proto_library(
         # TODO(rjh): fix that.
         "//resemble/v1alpha1:options_proto",
         "//resemble/v1alpha1:tasks_proto",
+        "@com_google_protobuf//:any_proto",
         "@com_google_protobuf//:timestamp_proto",
         "@googleapis//google/api:annotations_proto",
         "@googleapis//google/api:http_proto",
@@ -42,6 +43,7 @@ py_resemble_library(
         # TODO(rjh): fix that.
         "//resemble/v1alpha1:options_proto",
         "//resemble/v1alpha1:tasks_proto",
+        "@com_google_protobuf//:any_proto",
         "@com_google_protobuf//:timestamp_proto",
         "@googleapis//google/api:annotations_proto",
         "@googleapis//google/api:http_proto",

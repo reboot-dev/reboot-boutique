@@ -1,4 +1,5 @@
 load("@com_github_reboot_dev_respect//resemble:rules.bzl", "write_merged_source_files")
+load("@com_github_reboot_dev_respect//resemble/examples:rules.bzl", "write_templated_source_file")
 
 write_merged_source_files(
     name = "gen_ts",
@@ -6,4 +7,11 @@ write_merged_source_files(
     # These files are not committed.
     diff_test = False,
     write_path = "web/src/gen",
+)
+
+write_templated_source_file(
+    name = "README_md",
+    src = "//resemble/examples:README.j2.md",
+    dest = "README.md",
+    input_yaml = "//resemble/examples:boutique_README.md.yaml",
 )
