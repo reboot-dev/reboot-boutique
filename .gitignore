@@ -1,3 +1,4 @@
 # Generated .ts files.
 web/src/gen/*
 backend/secrets/*
+/.venv/

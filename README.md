@@ -1,3 +1,170 @@
+# Resemble Boutique
+
+For the impatient:
+1. Get a suitable environment:
+    * Use VSCode (on your machine)
+        * [... connected to a GitHub Codespace](#use-vscode-connected-to-a-github-codespace)
+        * [... with a local Dev Container](#use-vscode-with-a-local-dev-container)
+    * [Use a Docker Container](#use-a-docker-container)
+    * [Install prerequisites manually](#install-prerequisites-manually)
+2. [Run the application](#run-the-application)
+
+### Overview
+
+This repository contains an example online store application written using Resemble.
+
+The '.proto' files can be found in the `api/` directory, grouped into
+subdirectories by proto package, while backend specific code can be
+found in `backend/` and web specific code in `web/`.
+
+This repository includes a [Dev Container](https://containers.dev/) that _has all of the dependencies you need to build and run code in this repository already installed_.
+
+> [!NOTE]
+> The Dev Container's configuration for this repository is found in
+> [`.devcontainer/devcontainer.json`](main/.devcontainer/devcontainer.json). You
+> may expand on it to customize your development environment to your
+> liking.
+
+You can start the Dev Container in two different ways.
+
+<a id="use-vscode-connected-to-a-github-codespace"></a>
+## Use VSCode connected to a GitHub Codespace
+
+GitHub's [Codespaces](https://github.com/features/codespaces) are machines that
+are hosted in the cloud for you.
+
+> [!IMPORTANT]
+> You must connect your local VSCode to the codespace, you can not use VSCode in a browser window.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/reboot-dev/resemble-boutique)
+<br>
+(Right-Click to open in new tab or window)
+
+If you haven't [set your default editor to VSCode for codespaces](https://docs.github.com/en/codespaces/customizing-your-codespace/setting-your-default-editor-for-github-codespaces), then the 'Open in GitHub Codespaces' button above will end up opening VSCode in the browser. You can close that browser tab because _YOU MUST_ [open the existing codespace](https://docs.github.com/en/codespaces/developing-in-codespaces/opening-an-existing-codespace?tool=vscode) using the VSCode on your machine. You can also go to [https://github.com/codespaces](https://github.com/codespaces) and click the three dots next to the codespace you just created and then click `Open in ...` then `Open in Visual Studio Code`.
+
+Now you're ready to [run the application](#run-the-application)!
+
+<a id="use-vscode-with-a-local-dev-container"></a>
+## Use VSCode with a local Dev Container
+
+> [!IMPORTANT]
+> Currently, our Dev Container at [`.devcontainer/devcontainer.json`](main/.devcontainer/devcontainer.json) **only works on x86 CPU architectures**.
+
+If your machine meets the required specifications, you can start this
+repository's Dev Container with VSCode locally rather than using a GitHub Codespace.
+
+Clone this repository:
+
+<!-- TODO: fetch this snippet from a test. -->
+
+```shell
+git clone https://github.com/reboot-dev/resemble-boutique.git
+```
+
+Open the Dev Container:
+
+- In VSCode, open the `resemble-boutique` folder you've cloned.
+- Press: Ctrl+Shift+P (Linux / Windows) or Command+Shift+P (Mac)
+- Type/Select: `Dev Containers: Reopen In Container`
+
+VSCode will now start the Dev Container and restart VSCode to be running
+inside of that container.
+
+Now you're ready to [run the application](#run-the-application)!
+
+<a id="use-a-docker-container"></a>
+## Use a Docker container
+
+We've created a [Docker container](ghcr.io/reboot-dev/resemble-standalone) that _has all of the dependencies you need to build and run code in this repository already installed_.
+> [!IMPORTANT]
+> The Docker container currently **only works on x86 CPU architectures**. Check back soon for more supported architectures.
+
+Clone this repository:
+
+```shell
+git clone https://github.com/reboot-dev/resemble-boutique.git
+cd resemble-boutique/
+```
+
+Run the container:
+
+```shell
+export HOST_WORKING_DIRECTORY="$(pwd)"
+export CONTAINER_WORKSPACE_DIRECTORY="/workspaces/$(basename $HOST_WORKING_DIRECTORY)"
+docker run \
+  --mount type=bind,source="$HOST_WORKING_DIRECTORY",target="$CONTAINER_WORKSPACE_DIRECTORY" \
+  --workdir "$CONTAINER_WORKSPACE_DIRECTORY" \
+  --env "HOST_UID=$(id -u)" \
+  --env "HOST_GID=$(id -g)" \
+  -p 127.0.0.1:3000:3000/tcp \
+  -p 127.0.0.1:9991:9991/tcp \
+  --privileged \
+  --interactive \
+  --tty \
+  ghcr.io/reboot-dev/resemble-standalone:latest \
+  /bin/bash
+```
+
+Explanation of flags:
+* We --mount our --workdir (working directory), so we can work with it from the container.
+* We tell the container about our user's UID and GID so that the container's
+  user can match them, providing the same permissions inside and outside the
+  container.
+* We bind port 3000 so that we can access a React web front end (e.g., from a browser), and port 9991 so the web front end can access the Resemble backend.
+* `--privileged` so that we can run Docker inside of the container.
+* `--interactive` and `--tty` (often abbreviated `-it`) lets us interact with
+  the created container.
+* `ghcr.io/reboot-dev/resemble-standalone:latest` is the name of the container we'll be running.
+* `/bin/bash` is the shell we'd like to run.
+
+Now you're ready to [run the application](#run-the-application)!
+
+<a id="install-prerequisites-manually"></a>
+## Install prerequisites manually
+
+> [!IMPORTANT]
+> Resemble backends currently can **on x86_64 Linux** machines with
+> `glibc>=2.35` (Ubuntu Jammy and other equivalent-generation Linux
+> distributions), and **on arm64/x86_64 MacOS**, where `MacOS>=13.0` and
+> `Xcode>=14.3`. If you have a machine that doesn't fit this requirement, we
+> suggest using one of the approaches discussed above.
+### Prerequisites
+
+You must have the following tools installed:
+
+- Python (including `pip` and `venv`) >= 3.10
+- Node.js (including `npm`)
+- Docker
+
+### Clone Repository
+
+Clone this repository:
+
+```shell
+git clone https://github.com/reboot-dev/resemble-boutique.git
+cd resemble-boutique/
+```
+
+### Create and activate a virtual environment
+
+Create a new Python virtual environment in which to install Resemble
+requirements and run an application:
+
+```sh
+python -m venv ./.venv
+source ./.venv/bin/activate
+```
+
+To learn more about why virtual environments are a best practice for Python
+projects, see [the Python documentation for the `venv` module.](https://docs.python.org/3/library/venv.html)
+
+Now you're ready to [run the application](#run-the-application)!
+
+<a id="run-the-application"></a>
+## Run the application
+
+### Secrets
+
 To start the Resemble boutique backend you need to make sure you have
 secrets in place; you need the `mailgun-api-key` secret in the
 directory `backend/secrets`.
@@ -6,15 +173,121 @@ directory `backend/secrets`.
 mkdir secrets
 ```
 
-Replace `MY_MAILGUN_API_KEY` with your own mailgun API key, which you can get from [your Mailgun account](https://www.mailgun.com):
+Replace `MY_MAILGUN_API_KEY` with your own mailgun API key, which you can get
+from [your Mailgun account](https://www.mailgun.com):
 ```shell
 echo -n "MY_MAILGUN_API_KEY" >secrets/mailgun-api-key
 ```
 
-If you are using Reboot Cloud, read [the documentation about `rsm secret`](https://docs.reboot.dev/docs/concepts/secrets) to learn how to set a secret.
+If you are using Reboot Cloud, read
+[the documentation about `rsm secret`](https://docs.reboot.dev/docs/concepts/secrets) to
+learn how to set a secret.
 
-Then you can do development:
+### Backend via `rsm dev`
+
+Our backend is implemented in Python and we must install its dependencies before
+running it. The most notable of those dependencies is the `reboot-resemble` PyPI
+distribution, which contains both the Resemble CLI (`rsm`) and the `resemble`
+Python package.
+
+```sh
+pip install -r backend/src/requirements.txt
+```
+
+To run the application, you can now use the Resemble CLI `rsm`:
 
 ```shell
 rsm dev
 ```
+
+Running `rsm dev` will watch for file modifications and restart the
+application if necessary. See the `.rsmrc` file for flags and
+arguments that get expanded when running `rsm dev`.
+
+### Front end
+
+Similar to the backend, the front end has dependencies that need to be installed before running it. Open a separate terminal/shell and do:
+```shell
+cd web/
+npm install
+npm start
+```
+If using VSCode, the page will load automatically.
+If not using VSCode, visit [http://127.0.0.1:3000](http://127.0.0.1:3000)`.
+
+### Tests
+
+The application comes with backend tests.
+
+Before you run the tests, you'll
+need to ensure you've run `rsm protoc`.  If you've already run `rsm dev`
+without modifying `.rsmrc`, `rsm protoc` will have been run for you as
+part of that command.
+Otherwise, you can do it manually.
+
+```sh
+rsm protoc
+```
+
+`rsm protoc` will automatically make required Resemble '.proto'
+dependencies like `resemble/v1alpha1/options.proto` available on the
+import path without you having to check them into your own repository.
+
+Now you can run the tests using `pytest`:
+
+```sh
+pytest backend/
+```
+
+### Running on the Resemble Cloud
+
+Pick a public Docker registry you can push images to. Determine the name you'd
+like the image to have in that registry. For example:
+`ghcr.io/your-github-username/resemble-boutique`.
+
+Then, run the following to build and push your `resemble-boutique` container:
+```
+export IMAGE_NAME=<the name you picked>
+./build.sh --push $IMAGE_NAME
+```
+
+The `build.sh` script, when used with `--push`, will print an appropriate `rsm
+cloud up` command. For example:
+```
+Push complete!
+
+To run your image on the Resemble Cloud, run:
+
+  rsm cloud up --image-name=ghcr.io/your-github-username/resemble-boutique@sha256:ed9b9ffe98abcdef9371aa6e01baa6e1c80fff07085fdb14a25767746558818e --api-key=YOUR_API_KEY
+```
+
+Execute that `rsm cloud up` command to have your pushed Resemble container run
+on the Resemble Cloud! 🎉
+
+To make calls to the application that just started, get the endpoint URL from
+message output to the console.
+
+```sh
+Application starting; you application will be available at:
+
+<somelongstring>.<application_id>.resemble.cloud:9991
+```
+
+To build a version of the frontend that can talk to the deployed app, replace
+value passed to the `ResembleClient` in `web/serc/index.tsx`:
+
+```tsx
+const client = new ResembleClient(
+  "<somelongstring>.<application_id>.resemble.cloud:9991")
+;
+```
+
+Then run `npm run build`.
+
+Once built, this front end can be deployed to any static hosting provider like
+S3, Vercel, Cloudflare or Firebase hosting.
+
+<!--
+TODO: introduce an `rsm grpcurl` (or `rsm call` or ...) that lets us explore
+our backend in another terminal by calling RPCs.
+-->
