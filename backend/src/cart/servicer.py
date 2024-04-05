@@ -1,7 +1,7 @@
 import time
+from boutique.v1 import demo_pb2
+from boutique.v1.demo_rsm import Cart
 from resemble.aio.contexts import ReaderContext, WriterContext
-from resemble.examples.boutique.api import demo_pb2
-from resemble.examples.boutique.api.demo_rsm import Cart
 
 
 class CartServicer(Cart.Interface):
@@ -21,7 +21,7 @@ class CartServicer(Cart.Interface):
         # Re-enable email reminder after we support tasks in transactions.
         # See https://github.com/reboot-dev/respect/issues/2550
         # email_reminder_task = self.schedule(
-        #     timedelta(minutes=2.),
+        #     when=timedelta(minutes=2.),
         # ).EmailReminderTask(
         #     context,
         #     time_of_item_add=now,
@@ -45,7 +45,7 @@ class CartServicer(Cart.Interface):
         context: WriterContext,
         state: demo_pb2.CartState,
         request: demo_pb2.EmptyCartRequest,
-    ) -> demo_pb2.Empty:
+    ) -> Cart.EmptyCartEffects:
         del state.items[:]
         return Cart.EmptyCartEffects(
             response=demo_pb2.Empty(),

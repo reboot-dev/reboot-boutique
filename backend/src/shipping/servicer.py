@@ -1,8 +1,8 @@
 import uuid
+from boutique.v1 import demo_pb2
+from boutique.v1.demo_rsm import Shipping
 from datetime import timedelta
 from resemble.aio.contexts import ReaderContext, WriterContext
-from resemble.examples.boutique.api import demo_pb2
-from resemble.examples.boutique.api.demo_rsm import Shipping
 
 
 class ShippingServicer(Shipping.Interface):
@@ -25,7 +25,7 @@ class ShippingServicer(Shipping.Interface):
         state.quotes.append(quote)
 
         expire_quote_task = self.schedule(
-            timedelta(seconds=request.quote_expiration_seconds),
+            when=timedelta(seconds=request.quote_expiration_seconds),
         ).ExpireQuoteTask(
             context,
             quote=quote,

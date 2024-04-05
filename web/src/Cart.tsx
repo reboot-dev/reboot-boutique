@@ -2,16 +2,15 @@ import { PastOrders } from "PastOrders";
 import {
   Address,
   CreditCardInfo,
-  GetQuoteResponse,
   Money,
   ShippingQuote,
-} from "gen/demo_pb";
+} from "gen/boutique/v1/demo_pb";
 import {
   useCart,
   useCheckout,
   useProductCatalog,
   useShipping,
-} from "gen/demo_rsm_react";
+} from "gen/boutique/v1/demo_rsm_react";
 import {
   ProductItem,
   convertedShippingCost,
@@ -41,27 +40,30 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
   const [shippingQuote, setShippingQuote] = useState<ShippingQuote>();
   const [email, setEmail] = useState("someone@example.com");
   const { getProduct } = useProductCatalog({ id: "product-catalog" });
-  const { getQuote } = useShipping({ id: "shipping" });
-  const { useOrders } = useCheckout({ id: "checkout" });
+  const {
+    mutators: { getQuote },
+  } = useShipping({ id: "shipping" });
+  const {
+    useOrders,
+    mutators: { placeOrder },
+  } = useCheckout({ id: "checkout" });
   const {
     useGetItems,
     mutators: { emptyCart },
   } = useCart({ id: cartId });
 
-  const {
-    response: useOrdersResponse,
-    mutations: { PlaceOrder },
-    pendingPlaceOrderMutations,
-  } = useOrders();
+  const { response: useOrdersResponse } = useOrders();
 
   const { response: useGetItemsResponse } = useGetItems();
 
   useEffect(() => {
-    if (useGetItemsResponse !== undefined) {
-      for (const cartItem of useGetItemsResponse.items) {
-        const product = getProduct({ id: cartItem.productId });
+    async function runEffect() {
+      if (useGetItemsResponse !== undefined) {
+        for (const cartItem of useGetItemsResponse.items) {
+          const { response: productDetails } = await getProduct({
+            id: cartItem.productId,
+          });
 
-        product.then((productDetails) => {
           if (productDetails !== undefined && cartItem !== undefined) {
             if (
               !productItems.some(
@@ -75,15 +77,19 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
               ]);
             }
           }
-        });
-      }
+        }
 
-      const quote = getQuote({
-        address: USER_ADDRESS,
-        items: useGetItemsResponse.items,
-        quoteExpirationSeconds: 5000,
-      });
-      quote.then((quoteDetails: GetQuoteResponse) => {
+        const quote = getQuote({
+          address: USER_ADDRESS,
+          items: useGetItemsResponse.items,
+          quoteExpirationSeconds: 5000,
+        });
+
+        const { response: quoteDetails } = await getQuote({
+          address: USER_ADDRESS,
+          items: useGetItemsResponse.items,
+          quoteExpirationSeconds: 5000,
+        });
         if (quoteDetails !== undefined) {
           if (quoteDetails.quote !== undefined) {
             setShippingQuote(quoteDetails.quote);
@@ -96,8 +102,10 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
             }
           }
         }
-      });
+      }
     }
+
+    runEffect();
   }, [useGetItemsResponse, userCurrency]);
 
   const convertedProductItems = useCurrencyConvertProductItems(
@@ -112,10 +120,10 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
     userCurrency
   );
 
-  const placeOrder = async () => {
+  const handlePlaceOrder = async () => {
     // This error is an error that we know about in the backend.
     // For any other error type, just throw.
-    const { aborted } = await PlaceOrder(
+    const { aborted } = await placeOrder(
       {
         userId: cartId,
         userCurrency: userCurrency,
@@ -387,8 +395,8 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
                     <div className="col text-center">
                       <button
                         className="cymbal-button-primary"
-                        onClick={placeOrder}
-                        disabled={pendingPlaceOrderMutations.length > 0}
+                        onClick={handlePlaceOrder}
+                        disabled={placeOrder.pending.length > 0}
                       >
                         Place Order
                       </button>
@@ -403,7 +411,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
           getProduct={getProduct}
           response={useOrdersResponse}
           userCurrency={userCurrency}
-          pendingPlaceOrderMutations={pendingPlaceOrderMutations}
+          pendingPlaceOrderMutations={placeOrder.pending}
         />
       </main>
     </>

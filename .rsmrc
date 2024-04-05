@@ -1,22 +1,29 @@
 ### Backend flags ###
-# The following `dev` commands are sufficient to run the full backend of this
+# The following `dev run` commands are sufficient to run the full backend of this
 # app locally.
 
 # Run the backend in the current directory.
-dev --working-directory=.
+protoc --working-directory=.
+dev run --working-directory=.
+
+# Find the protos in the `api/` directory.
+protoc api/
+
+# Generate proto code into different directories for different languages.
+# TODO(rjh): the `--output-directory` flag is useless here; remove it when possible.
+protoc --output-directory=gen/
+protoc --
+protoc --python_out=backend/api/
+protoc --resemble_react_out=web/src/gen
 
 # Don't cause chaos; it makes it hard to play with the API with e.g. `grpcurl`
 # if that API is constantly going down and coming back up.
-dev --no-chaos
+dev run --no-chaos
 
-# Use ibazel to rebuild the application on changes.
-dev --background-command="ibazel build //resemble/examples/boutique/backend:app_zip"
-dev --background-command="ibazel run //resemble/examples/boutique:gen_ts"
+dev run --secrets-directory=./backend/secrets
 
-# Bazel is doing the protobuf building; no need for `rsm protoc`.
-dev --no-protoc-watch
+# PYTHONPATH must be explicitly set to pick up generated code.
+dev run --env=PYTHONPATH=backend/api/
 
-dev --secrets-directory=./backend/secrets
-
-# The application gets built into bazel-bin.
-dev ../../../bazel-bin/resemble/examples/boutique/backend/app.zip
+dev run --python
+dev run backend/src/main.py

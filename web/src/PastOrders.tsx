@@ -1,11 +1,13 @@
 import { PartialMessage } from "@bufbuild/protobuf";
+import type { ResponseOrAborted } from "@reboot-dev/resemble-react";
 import {
   GetProductRequest,
   OrderResult,
   OrdersResponse,
   PlaceOrderRequest,
   Product,
-} from "gen/demo_pb";
+} from "gen/boutique/v1/demo_pb";
+import { ProductCatalogGetProductAborted } from "gen/boutique/v1/demo_rsm_react";
 import {
   ProductItem,
   multiplyMoney,
@@ -19,7 +21,7 @@ import css from "./PastOrders.module.css";
 interface OrdersSummaryProps {
   getProduct: (
     partialRequest?: PartialMessage<GetProductRequest> | undefined
-  ) => Promise<Product>;
+  ) => Promise<ResponseOrAborted<Product, ProductCatalogGetProductAborted>>;
   userCurrency: string;
   response: OrdersResponse | undefined;
   pendingPlaceOrderMutations: {
@@ -42,14 +44,16 @@ export const PastOrders = ({
   }>({});
 
   useEffect(() => {
-    if (response !== undefined) {
-      for (const order of response.orders) {
-        let productItems: ProductItem[] = [];
-        for (const orderItem of order.items) {
-          if (orderItem !== undefined && orderItem.item !== undefined) {
-            const product = getProduct({ id: orderItem.item.productId });
-            const item = orderItem.item;
-            product.then((productDetails) => {
+    async function runEffect() {
+      if (response !== undefined) {
+        for (const order of response.orders) {
+          let productItems: ProductItem[] = [];
+          for (const orderItem of order.items) {
+            if (orderItem !== undefined && orderItem.item !== undefined) {
+              const { response: productDetails } = await getProduct({
+                id: orderItem.item.productId,
+              });
+              const item = orderItem.item;
               if (productDetails !== undefined) {
                 // This check is required to handle ISSUE: #1727.
                 if (productDetails.hasOwnProperty("id")) {
@@ -67,11 +71,12 @@ export const PastOrders = ({
                   }));
                 }
               }
-            });
+            }
           }
         }
       }
     }
+    runEffect();
   }, [response]);
 
   return (

@@ -1,5 +1,5 @@
-import { Product as pb_Product } from "gen/demo_pb";
-import { useCart, useProductCatalog } from "gen/demo_rsm_react";
+import { Product as pb_Product } from "gen/boutique/v1/demo_pb";
+import { useCart, useProductCatalog } from "gen/boutique/v1/demo_rsm_react";
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -25,10 +25,11 @@ export const Product = ({ cartId, userCurrency }: ProductProps) => {
   const [product, setProduct] = useState<pb_Product>();
 
   useEffect(() => {
-    const response = getProduct({ id: productId });
-    response.then((product: pb_Product) => {
+    async function runEffect() {
+      const { response: product } = await getProduct({ id: productId });
       setProduct(product);
-    });
+    }
+    runEffect();
   }, []);
 
   const products = useCurrencyConvertProducts(product, userCurrency);

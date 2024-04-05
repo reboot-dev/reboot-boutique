@@ -12,7 +12,9 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-const client = new ResembleClient("https://localhost.direct:9991");
+const client = new ResembleClient(
+  process.env.REACT_APP_REBOOT_RESEMBLE_ENDPOINT as string
+);
 
 root.render(
   <ResembleClientProvider client={client}>

@@ -1,7 +1,7 @@
 import grpc
 import json
 import os
-from resemble.examples.boutique.api import demo_pb2, demo_pb2_grpc
+from boutique.v1 import demo_pb2, demo_pb2_grpc
 
 NANOS_CONVERSION = 1000000000
 

@@ -1,32 +1,38 @@
 import os
 import uuid
+from boutique.v1 import demo_pb2, demo_pb2_grpc
+from boutique.v1.demo_rsm import Cart, Checkout, ProductCatalog, Shipping
+from constants import PRODUCT_CATALOG_ACTOR_ID, SHIPPING_ACTOR_ID
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from logger import logger
+from resemble.aio.call import Options
 from resemble.aio.contexts import (
     ReaderContext,
     TransactionContext,
     WriterContext,
 )
 from resemble.aio.secrets import Secrets
-from resemble.examples.boutique.api import demo_pb2, demo_pb2_grpc
-from resemble.examples.boutique.api.demo_rsm import (
-    Cart,
-    Checkout,
-    ProductCatalog,
-    Shipping,
-)
-from resemble.examples.boutique.backend.constants import (
-    PRODUCT_CATALOG_ACTOR_ID,
-    SHIPPING_ACTOR_ID,
-)
-from resemble.examples.boutique.backend.logger import logger
 from resemble.integrations.mailgun.servicers import MAILGUN_API_KEY_SECRET_NAME
 from resemble.integrations.mailgun.v1.mailgun_rsm import Message
+from typing import Optional
 
 
 class CheckoutServicer(Checkout.Interface):
 
     def __init__(self):
-        self._secrets = Secrets()
+        try:
+            self._secrets: Optional[Secrets] = Secrets()
+        except:
+            # TODO(rjh,stuhood): remove this when secrets are supported on the
+            #                    Cloud.
+            # TODO(rjh,stuhood): make an error reading the Cloud API key more
+            #                    specific than `Exception` so this use case
+            #                    doesn't need to catch everything?
+            logger.warning(
+                "Failed to get secrets access, probably because secrets are "
+                "not supported on the Reboot Cloud yet. Will not use secrets."
+            )
+            self._secrets = None
 
     async def Create(
         self,
@@ -43,13 +49,13 @@ class CheckoutServicer(Checkout.Interface):
         request: demo_pb2.PlaceOrderRequest,
     ) -> demo_pb2.PlaceOrderResponse:
         # Get user cart.
-        cart = Cart(request.user_id)
+        cart = Cart.lookup(request.user_id)
 
         get_items_response = await cart.GetItems(context)
 
         # For each item in the cart, verify that it is a real product, get its
         # price, and convert the price to user currency.
-        product_catalog = ProductCatalog(PRODUCT_CATALOG_ACTOR_ID)
+        product_catalog = ProductCatalog.lookup(PRODUCT_CATALOG_ACTOR_ID)
 
         # Convert to user currency.
         order_items: list[demo_pb2.OrderItem] = []
@@ -81,7 +87,7 @@ class CheckoutServicer(Checkout.Interface):
         # NOTE: WE MUST PREPARE THE SHIPPING FIRST BECAUSE WE "RETURN"
         # ERRORS THAT ARE NOT SEEN AS FAILURES SO THE TRANSACTION WILL
         # COMMIT!
-        shipping = Shipping(SHIPPING_ACTOR_ID)
+        shipping = Shipping.lookup(SHIPPING_ACTOR_ID)
 
         await shipping.PrepareShipOrder(
             context,
@@ -124,20 +130,28 @@ class CheckoutServicer(Checkout.Interface):
         template = env.get_template('thanks_for_listening_to_demo.html')
 
         confirmation = template.render(order=order_result)
-        mailgun_api_key = await self._secrets.get(MAILGUN_API_KEY_SECRET_NAME)
 
-        await Message(
-            str(uuid.uuid4()),
-            bearer_token=mailgun_api_key.decode(),
-        ).Send(
-            context,
-            recipient=request.email,
-            sender='Reboot Team <team@reboot.dev>',
-            domain='reboot.dev',
-            subject='Thanks from the team at reboot.dev!',
-            html=confirmation,
-        )
+        if self._secrets is not None:
+            mailgun_api_key = await self._secrets.get(
+                MAILGUN_API_KEY_SECRET_NAME
+            )
 
+            await Message.Send(
+                str(uuid.uuid4()),
+                context,
+                Options(bearer_token=mailgun_api_key.decode()),
+                recipient=request.email,
+                sender='Reboot Team <team@reboot.dev>',
+                domain='reboot.dev',
+                subject='Thanks from the team at reboot.dev!',
+                html=confirmation,
+            )
+        else:
+            # TODO(rjh,stuhood): remove this when secrets are supported on the
+            #                    Cloud.
+            logger.warning(
+                "No secrets available. Will not send order confirmation email."
+            )
         logger.info(f"Order placed for '{request.email}'")
 
         return demo_pb2.PlaceOrderResponse(order=order_result)
@@ -147,5 +161,5 @@ class CheckoutServicer(Checkout.Interface):
         context: ReaderContext,
         state: demo_pb2.CheckoutState,
         request: demo_pb2.OrdersRequest,
-    ) -> demo_pb2.PlaceOrderResponse:
+    ) -> demo_pb2.OrdersResponse:
         return demo_pb2.OrdersResponse(orders=reversed(state.orders))

@@ -1,9 +1,9 @@
 import json
 import os
+from boutique.v1 import demo_pb2
+from boutique.v1.demo_rsm import ProductCatalog
 from google.protobuf.json_format import ParseDict
 from resemble.aio.contexts import ReaderContext, WriterContext
-from resemble.examples.boutique.api import demo_pb2
-from resemble.examples.boutique.api.demo_rsm import ProductCatalog
 
 
 class ProductCatalogServicer(ProductCatalog.Interface):
