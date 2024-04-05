@@ -1,32 +1,21 @@
 import asyncio
 import unittest
+from boutique.v1 import demo_pb2, demo_pb2_grpc
+from boutique.v1.demo_rsm import Cart, Checkout, Shipping
+from cart.servicer import CartServicer
+from checkout.servicer import CheckoutServicer
+from constants import CHECKOUT_ACTOR_ID, SHIPPING_ACTOR_ID
+from currencyconverter.servicer import CurrencyConverterServicer
+from main import initialize
+from productcatalog.servicer import ProductCatalogServicer
 from resemble.aio.secrets import MockSecretSource, Secrets
 from resemble.aio.tests import Resemble
 from resemble.aio.workflows import Workflow
-from resemble.examples.boutique.api import demo_pb2, demo_pb2_grpc
-from resemble.examples.boutique.api.demo_rsm import Cart, Checkout, Shipping
-from resemble.examples.boutique.backend.app import initialize
-from resemble.examples.boutique.backend.cart.servicer import CartServicer
-from resemble.examples.boutique.backend.checkout.servicer import (
-    CheckoutServicer,
-)
-from resemble.examples.boutique.backend.constants import (
-    CHECKOUT_ACTOR_ID,
-    SHIPPING_ACTOR_ID,
-)
-from resemble.examples.boutique.backend.currencyconverter.servicer import (
-    CurrencyConverterServicer,
-)
-from resemble.examples.boutique.backend.productcatalog.servicer import (
-    ProductCatalogServicer,
-)
-from resemble.examples.boutique.backend.shipping.servicer import (
-    ShippingServicer,
-)
 from resemble.integrations.mailgun.servicers import (
     MAILGUN_API_KEY_SECRET_NAME,
     MockMessageServicer,
 )
+from shipping.servicer import ShippingServicer
 
 # Any arbitrary mailgun API key works for the `MockMessageServicer`.
 MAILGUN_API_KEY = 'S3CR3T!'
@@ -72,7 +61,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
     async def test_checkout(self) -> None:
         """Check out a single item successfully."""
         # Add an item to a cart.
-        cart = Cart('jonathan')
+        cart = Cart.lookup('jonathan')
         await cart.AddItem(
             self.workflow,
             item=demo_pb2.CartItem(
@@ -82,14 +71,14 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         )
 
         # Get a shipping quote for that card in preparation for checkout.
-        shipping = Shipping(SHIPPING_ACTOR_ID)
+        shipping = Shipping.lookup(SHIPPING_ACTOR_ID)
         get_quote_response = await shipping.GetQuote(
             self.workflow,
             quote_expiration_seconds=30,
         )
 
         # Check out the order.
-        checkout = Checkout(CHECKOUT_ACTOR_ID)
+        checkout = Checkout.lookup(CHECKOUT_ACTOR_ID)
 
         place_order_response = await checkout.PlaceOrder(
             self.workflow,
@@ -136,7 +125,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         """Check out a single item with an expired shipping quote, and see the
         checkout fail to complete."""
         # Add an item to a cart.
-        cart = Cart('jonathan')
+        cart = Cart.lookup('jonathan')
         await cart.AddItem(
             self.workflow,
             item=demo_pb2.CartItem(
@@ -147,7 +136,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
 
         # Get a shipping quote for that card in preparation for checkout.
         # Use an expiration time of 0 so that the quote will expire immediately.
-        shipping = Shipping(SHIPPING_ACTOR_ID)
+        shipping = Shipping.lookup(SHIPPING_ACTOR_ID)
         get_quote_response = await shipping.GetQuote(
             self.workflow,
             quote_expiration_seconds=0,
@@ -157,7 +146,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
 
         # The quote should have expired and the order should not have
         # gone through.
-        checkout = Checkout(CHECKOUT_ACTOR_ID)
+        checkout = Checkout.lookup(CHECKOUT_ACTOR_ID)
 
         with self.assertRaises(Checkout.PlaceOrderAborted) as aborted:
             await checkout.PlaceOrder(
@@ -168,8 +157,9 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
                 quote=get_quote_response.quote,
             )
 
-        self.assertIsInstance(
-            aborted.exception.error, demo_pb2.ShippingQuoteInvalidOrExpired
+        self.assertEqual(
+            type(aborted.exception.error),
+            demo_pb2.ShippingQuoteInvalidOrExpired
         )
 
     async def test_currency_conversion(self) -> None:
@@ -215,7 +205,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # TODO(rjh): remove the need for us to reach into the channel manager
         # and to pass an actor ID when reaching out to a plain gRPC service.
         async with self.workflow.channel_manager.get_channel_from_service_name(
-            'resemble.examples.boutique.api.CurrencyConverter',
+            'boutique.v1.CurrencyConverter',
             actor_id='',
         ) as channel:
             stub = demo_pb2_grpc.CurrencyConverterStub(channel)

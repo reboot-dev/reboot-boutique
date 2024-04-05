@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-package resemble.examples.boutique.api;
+package boutique.v1;
 
 import "resemble/v1alpha1/options.proto";
 
@@ -157,27 +157,27 @@ message ShippingState {
 }
 
 service Shipping {
-  option (.resemble.v1alpha1.service).state = "ShippingState";
+  option (resemble.v1alpha1.service).state = "ShippingState";
 
   rpc GetQuote(GetQuoteRequest) returns (GetQuoteResponse) {
-    option (.resemble.v1alpha1.method).writer = {
+    option (resemble.v1alpha1.method).writer = {
     };
   }
   rpc PrepareShipOrder(PrepareShipOrderRequest)
       returns (PrepareShipOrderResponse) {
-    option (.resemble.v1alpha1.method) = {
+    option (resemble.v1alpha1.method) = {
       writer: {},
       errors: [ "ShippingQuoteInvalidOrExpired" ],
     };
   }
   rpc ExpireQuoteTask(ExpireQuoteTaskRequest) returns (Empty) {
-    option (.resemble.v1alpha1.method) = {
+    option (resemble.v1alpha1.method) = {
       writer: {},
       task: {},
     };
   }
   rpc ShipOrderTask(ShipOrderTaskRequest) returns (Empty) {
-    option (.resemble.v1alpha1.method) = {
+    option (resemble.v1alpha1.method) = {
       reader: {},
       task: {},
     };

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Cart } from "./Cart";
 import { Header } from "./Header";
-import { useCart } from "./gen/demo_rsm_react";
+import { useCart } from "./gen/boutique/v1/demo_rsm_react";
 import "./static/styles/cart.css";
 import "./static/styles/order.css";
 import "./static/styles/styles.css";
@@ -34,7 +34,9 @@ function App() {
   const { useGetItems } = useCart({ id: CART_ACTOR_ID });
 
   useEffect(() => {
-    fetch("https://localhost.direct:9991/get_supported_currencies")
+    fetch(
+      `${process.env.REACT_APP_REBOOT_RESEMBLE_ENDPOINT}/get_supported_currencies`
+    )
       .then((res) => res.json())
       .then((json: { currencyCodes: string[] }) =>
         setCurrencies(json.currencyCodes)

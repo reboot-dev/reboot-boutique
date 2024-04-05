@@ -1,12 +1,28 @@
-load("@com_github_reboot_dev_respect//resemble:rules.bzl", "write_merged_source_files")
+# This `BUILD.bazel` file allows a `bazel` system (configured outside of this
+# repository) to use code in this directory and its subdirectories.
+
 load("@com_github_reboot_dev_respect//resemble/examples:rules.bzl", "write_templated_source_file")
 
-write_merged_source_files(
-    name = "gen_ts",
-    srcs = ["//resemble/examples/boutique/api:demo_py_resemble"],
-    # These files are not committed.
-    diff_test = False,
-    write_path = "web/src/gen",
+filegroup(
+    name = "everything",
+    srcs = glob(
+        ["**/*"],
+        exclude = [
+            # Files that may be created by activity in this directory, such
+            # as manually following the steps of the `README.md` file, but which
+            # are not part of the "source code" of this repository.
+            ".venv/**/*",
+            ".resemble-boutique-venv/**/*",
+            ".pytest_cache/**/*",
+            "api/gen/**/*.js",
+            "web/node_modules/**/*",
+            "web/dist/**/*",
+            "web/src/gen/**/*.js",
+            "web/src/gen/**/*.ts",
+            "web/package-lock.json",
+        ],
+    ),
+    visibility = ["//visibility:public"],
 )
 
 write_templated_source_file(

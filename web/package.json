@@ -3,10 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@bufbuild/buf": "^1.23.1",
-    "@bufbuild/protobuf": "^1.2.1",
-    "@bufbuild/protoc-gen-es": "^1.2.1",
-    "@reboot-dev/resemble-react": "^0.5.3",
+    "@reboot-dev/resemble-react": "^0.5.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -28,10 +25,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm-run-all --parallel dev generate buf",
-    "dev": "BROWSER=none react-scripts start",
-    "buf": "npx buf mod update proto/",
-    "generate": "watch 'npx buf generate' ./proto",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

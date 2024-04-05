@@ -1,4 +1,4 @@
-import { useProductCatalog } from "gen/demo_rsm_react";
+import { useProductCatalog } from "gen/boutique/v1/demo_rsm_react";
 import { Link } from "react-router-dom";
 import {
   ProductEntry,

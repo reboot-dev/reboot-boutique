@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CartItem, Money, Product } from "./gen/demo_pb";
+import { CartItem, Money, Product } from "./gen/boutique/v1/demo_pb";
 
 export interface ProductItem {
   product: Product;
@@ -25,13 +25,16 @@ export const convertedShippingCost = async (
     description: "this is the wrong api",
     price: cost,
   };
-  const response = await fetch("https://localhost.direct:9991/convert", {
-    method: "POST",
-    body: JSON.stringify({
-      products: [fakeProduct],
-      toCode: userCurrency,
-    }),
-  });
+  const response = await fetch(
+    `${process.env.REACT_APP_REBOOT_RESEMBLE_ENDPOINT}/convert`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        products: [fakeProduct],
+        toCode: userCurrency,
+      }),
+    }
+  );
   const json = await response.json();
 
   return json.products[0].price;
@@ -51,7 +54,7 @@ export const useCurrencyConvertProductItems = (
     if (userCurrency === "USD") {
       setConvertedProductItems(productItems);
     } else {
-      fetch("https://localhost.direct:9991/convert", {
+      fetch(`${process.env.REACT_APP_REBOOT_RESEMBLE_ENDPOINT}/convert`, {
         method: "POST",
         body: JSON.stringify({
           products: productItems.map(
@@ -94,7 +97,7 @@ export const useCurrencyConvertProducts = (
     if (userCurrency === "USD") {
       setConvertedProducts(products);
     } else {
-      fetch("https://localhost.direct:9991/convert", {
+      fetch(`${process.env.REACT_APP_REBOOT_RESEMBLE_ENDPOINT}/convert`, {
         method: "POST",
         body: JSON.stringify({
           products: products,
