@@ -2,16 +2,15 @@
 # The following `dev run` commands are sufficient to run the full backend of this
 # app locally.
 
-# Run the backend in the current directory.
-protoc --working-directory=.
-dev run --working-directory=.
+# Watch if any generated or source files are modified.
+dev run --watch=backend/api/**/*.py
+dev run --watch=backend/src/**/*.py
+dev run --protoc-watch
 
 # Find the protos in the `api/` directory.
 protoc api/
 
 # Generate proto code into different directories for different languages.
-# TODO(rjh): the `--output-directory` flag is useless here; remove it when possible.
-protoc --output-directory=gen/
 protoc --
 protoc --python_out=backend/api/
 protoc --resemble_react_out=web/src/gen
