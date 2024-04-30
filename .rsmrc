@@ -5,10 +5,12 @@
 # Watch if any generated or source files are modified.
 dev run --watch=backend/api/**/*.py
 dev run --watch=backend/src/**/*.py
-dev run --protoc-watch
 
 # Find the protos in the `api/` directory.
 protoc api/
+
+# Generate code for a Python backend and React frontend.
+protoc --generate=python,react
 
 # Generate proto code into different directories for different languages.
 protoc --
