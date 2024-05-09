@@ -56,7 +56,7 @@ Now you're ready to [run the application](#run-the-application)!
 
 ### Secrets
 
-To start the Resemble boutique backend you need to make sure you have
+To start the Resemble Boutique backend you need to make sure you have
 secrets in place; you need the `mailgun-api-key` secret in the
 directory `backend/secrets`.
 
