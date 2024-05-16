@@ -173,13 +173,11 @@ service Shipping {
   rpc ExpireQuoteTask(ExpireQuoteTaskRequest) returns (Empty) {
     option (resemble.v1alpha1.method) = {
       writer: {},
-      task: {},
     };
   }
   rpc ShipOrderTask(ShipOrderTaskRequest) returns (Empty) {
     option (resemble.v1alpha1.method) = {
       reader: {},
-      task: {},
     };
   }
 }

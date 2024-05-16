@@ -9,6 +9,9 @@ dev run --watch=backend/src/**/*.py
 # Find the protos in the `api/` directory.
 protoc api/
 
+# Put boilerplate files in 'boilerplate/'.
+protoc --boilerplate=boilerplate/
+
 # Generate code for a Python backend and React frontend.
 protoc --generate=python,react
 
