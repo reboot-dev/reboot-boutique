@@ -54,7 +54,20 @@ Now you're ready to [run the application](#run-the-application)!
 <a id="run-the-application"></a>
 ## Run the application
 
-### Secrets
+### Backend via `rsm`
+
+Our backend is implemented in Python and we must install its dependencies before
+running it. The most notable of those dependencies is the `reboot-resemble` PyPI
+distribution, which contains both the Resemble CLI (`rsm`) and the `resemble`
+Python package.
+
+Using `rye`, we can create and activate a virtualenv containing this project's dependencies (as well as fetch an appropriate Python version) using:
+```sh
+rye sync --no-lock
+source .venv/bin/activate
+```
+
+#### Setup secrets
 
 To start the Resemble boutique backend you need to make sure you have
 secrets in place; you need the `mailgun-api-key` secret in the
@@ -74,18 +87,7 @@ If you are using Reboot Cloud, read
 [the documentation about `rsm secret`](https://docs.reboot.dev/docs/concepts/secrets) to
 learn how to set a secret.
 
-### Backend via `rsm dev run`
-
-Our backend is implemented in Python and we must install its dependencies before
-running it. The most notable of those dependencies is the `reboot-resemble` PyPI
-distribution, which contains both the Resemble CLI (`rsm`) and the `resemble`
-Python package.
-
-Using `rye`, we can create and activate a virtualenv containing this project's dependencies (as well as fetch an appropriate Python version) using:
-```sh
-rye sync --no-lock
-source .venv/bin/activate
-```
+#### Run the backend
 
 Then, to run the application, you can use the Resemble CLI `rsm` (present in the active virtualenv):
 ```shell
@@ -96,7 +98,7 @@ Running `rsm dev run` will watch for file modifications and restart the
 application if necessary. See the `.rsmrc` file for flags and
 arguments that get expanded when running `rsm dev run`.
 
-### Front end
+### Front end via `npm`
 
 Similar to the backend, the front end has dependencies that need to be installed before running it. Open a separate terminal/shell and do:
 ```shell
