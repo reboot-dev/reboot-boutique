@@ -10,7 +10,7 @@ class ShippingServicer(Shipping.Interface):
     async def GetQuote(
         self,
         context: WriterContext,
-        state: demo_pb2.ShippingState,
+        state: Shipping.State,
         request: demo_pb2.GetQuoteRequest,
     ) -> Shipping.GetQuoteEffects:
         quote = demo_pb2.ShippingQuote(
@@ -40,7 +40,7 @@ class ShippingServicer(Shipping.Interface):
     async def PrepareShipOrder(
         self,
         context: WriterContext,
-        state: demo_pb2.ShippingState,
+        state: Shipping.State,
         request: demo_pb2.PrepareShipOrderRequest,
     ) -> Shipping.PrepareShipOrderEffects:
         # Remove the quote, unless it is missing implying it has been
@@ -76,7 +76,7 @@ class ShippingServicer(Shipping.Interface):
     async def ExpireQuoteTask(
         self,
         context: WriterContext,
-        state: demo_pb2.ShippingState,
+        state: Shipping.State,
         request: demo_pb2.ExpireQuoteTaskRequest,
     ) -> Shipping.ExpireQuoteTaskEffects:
         # Remove the quote.
@@ -94,7 +94,7 @@ class ShippingServicer(Shipping.Interface):
     async def ShipOrderTask(
         self,
         context: ReaderContext,
-        state: demo_pb2.ShippingState,
+        state: Shipping.State,
         request: demo_pb2.ShipOrderTaskRequest,
     ) -> demo_pb2.Empty:
         # This is where we'd actually do the shipping, retrying if we

@@ -40,7 +40,7 @@ class CheckoutServicer(Checkout.Interface):
         request: demo_pb2.Empty,
     ) -> Checkout.CreateEffects:
         return Checkout.CreateEffects(
-            state=demo_pb2.CheckoutState(), response=demo_pb2.Empty()
+            state=Checkout.State(), response=demo_pb2.Empty()
         )
 
     async def PlaceOrder(
@@ -113,7 +113,7 @@ class CheckoutServicer(Checkout.Interface):
 
         async def add_order_result(
             context: WriterContext,
-            state: demo_pb2.CheckoutState,
+            state: Checkout.State,
         ) -> Checkout.Interface.Effects:
             state.orders.append(order_result)
             return Checkout.Interface.Effects(state=state)
@@ -159,7 +159,7 @@ class CheckoutServicer(Checkout.Interface):
     async def Orders(
         self,
         context: ReaderContext,
-        state: demo_pb2.CheckoutState,
+        state: Checkout.State,
         request: demo_pb2.OrdersRequest,
     ) -> demo_pb2.OrdersResponse:
         return demo_pb2.OrdersResponse(orders=reversed(state.orders))

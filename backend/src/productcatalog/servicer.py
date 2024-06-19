@@ -17,16 +17,14 @@ class ProductCatalogServicer(ProductCatalog.Interface):
             os.path.join(os.path.dirname(__file__), 'products.json'), 'r'
         ) as file:
             return ProductCatalog.LoadProductsEffects(
-                state=ParseDict(
-                    json.load(file), demo_pb2.ProductCatalogState()
-                ),
+                state=ParseDict(json.load(file), ProductCatalog.State()),
                 response=demo_pb2.Empty(),
             )
 
     async def ListProducts(
         self,
         context: ReaderContext,
-        state: demo_pb2.ProductCatalogState,
+        state: ProductCatalog.State,
         request: demo_pb2.Empty,
     ) -> demo_pb2.ListProductsResponse:
         return demo_pb2.ListProductsResponse(products=state.products)
@@ -34,7 +32,7 @@ class ProductCatalogServicer(ProductCatalog.Interface):
     async def GetProduct(
         self,
         context: ReaderContext,
-        state: demo_pb2.ProductCatalogState,
+        state: ProductCatalog.State,
         request: demo_pb2.GetProductRequest,
     ) -> demo_pb2.Product:
 
@@ -49,7 +47,7 @@ class ProductCatalogServicer(ProductCatalog.Interface):
     async def SearchProducts(
         self,
         context: ReaderContext,
-        state: demo_pb2.ProductCatalogState,
+        state: ProductCatalog.State,
         request: demo_pb2.SearchProductsRequest,
     ) -> demo_pb2.SearchProductsResponse:
         raise NotImplementedError

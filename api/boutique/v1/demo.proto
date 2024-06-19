@@ -32,9 +32,7 @@ message TaskId {
 
 // -----------------Cart service-----------------
 
-service Cart {
-  option (.resemble.v1alpha1.service).state = "CartState";
-
+service CartInterface {
   rpc AddItem(AddItemRequest) returns (Empty) {
     option (.resemble.v1alpha1.method).writer = {
     };
@@ -49,7 +47,9 @@ service Cart {
   }
 }
 
-message CartState {
+message Cart {
+  option (.resemble.v1alpha1.state) = {
+  };
   repeated CartItem items = 1;
 }
 
@@ -91,13 +91,13 @@ message ListRecommendationsResponse {
 
 // ---------------Product Catalog----------------
 
-message ProductCatalogState {
+message ProductCatalog {
+  option (.resemble.v1alpha1.state) = {
+  };
   repeated Product products = 1;
 }
 
-service ProductCatalog {
-  option (.resemble.v1alpha1.service).state = "ProductCatalogState";
-
+service ProductCatalogInterface {
   rpc LoadProducts(Empty) returns (Empty) {
     option (.resemble.v1alpha1.method).writer = {
       constructor: {},
@@ -152,13 +152,13 @@ message ShippingQuote {
   Money cost = 2;
 }
 
-message ShippingState {
+message Shipping {
+  option (.resemble.v1alpha1.state) = {
+  };
   repeated ShippingQuote quotes = 1;
 }
 
-service Shipping {
-  option (resemble.v1alpha1.service).state = "ShippingState";
-
+service ShippingInterface {
   rpc GetQuote(GetQuoteRequest) returns (GetQuoteResponse) {
     option (resemble.v1alpha1.method).writer = {
     };
@@ -284,8 +284,7 @@ message ChargeResponse {
 
 // -------------Checkout service-----------------
 
-service Checkout {
-  option (.resemble.v1alpha1.service).state = "CheckoutState";
+service CheckoutInterface {
   rpc Create(Empty) returns (Empty) {
     option (.resemble.v1alpha1.method).writer = {
       constructor: {},
@@ -317,7 +316,9 @@ message OrderResult {
   repeated OrderItem items = 4;
 }
 
-message CheckoutState {
+message Checkout {
+  option (.resemble.v1alpha1.state) = {
+  };
   repeated OrderResult orders = 3;
 }
 

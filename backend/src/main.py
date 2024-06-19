@@ -23,9 +23,15 @@ servicers: list[type] = [
 
 
 async def initialize(workflow: Workflow):
-    await Checkout.Create(CHECKOUT_ACTOR_ID, workflow)
+    await Checkout.idempotently('initialize').Create(
+        CHECKOUT_ACTOR_ID,
+        workflow,
+    )
 
-    await ProductCatalog.LoadProducts(PRODUCT_CATALOG_ACTOR_ID, workflow)
+    await ProductCatalog.idempotently('initialize').LoadProducts(
+        PRODUCT_CATALOG_ACTOR_ID,
+        workflow,
+    )
 
 
 async def main():

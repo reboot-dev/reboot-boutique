@@ -10,6 +10,7 @@ from main import initialize
 from productcatalog.servicer import ProductCatalogServicer
 from resemble.aio.secrets import MockSecretSource, Secrets
 from resemble.aio.tests import Resemble
+from resemble.aio.types import ServiceName
 from resemble.aio.workflows import Workflow
 from resemble.integrations.mailgun.servicers import (
     MAILGUN_API_KEY_SECRET_NAME,
@@ -205,7 +206,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # TODO(rjh): remove the need for us to reach into the channel manager
         # and to pass an actor ID when reaching out to a plain gRPC service.
         async with self.workflow.channel_manager.get_channel_from_service_name(
-            'boutique.v1.CurrencyConverter',
+            ServiceName('boutique.v1.CurrencyConverter'),
             actor_id='',
         ) as channel:
             stub = demo_pb2_grpc.CurrencyConverterStub(channel)
