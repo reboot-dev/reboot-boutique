@@ -9,7 +9,7 @@ class CartServicer(Cart.Interface):
     async def AddItem(
         self,
         context: WriterContext,
-        state: demo_pb2.CartState,
+        state: Cart.State,
         request: demo_pb2.AddItemRequest,
     ) -> Cart.AddItemEffects:
 
@@ -35,7 +35,7 @@ class CartServicer(Cart.Interface):
     async def GetItems(
         self,
         context: ReaderContext,
-        state: demo_pb2.CartState,
+        state: Cart.State,
         request: demo_pb2.GetItemsRequest,
     ) -> demo_pb2.GetItemsResponse:
         return demo_pb2.GetItemsResponse(items=state.items)
@@ -43,7 +43,7 @@ class CartServicer(Cart.Interface):
     async def EmptyCart(
         self,
         context: WriterContext,
-        state: demo_pb2.CartState,
+        state: Cart.State,
         request: demo_pb2.EmptyCartRequest,
     ) -> Cart.EmptyCartEffects:
         del state.items[:]

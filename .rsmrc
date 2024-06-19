@@ -12,13 +12,10 @@ protoc api/
 # Put boilerplate files in 'boilerplate/'.
 protoc --boilerplate=boilerplate/
 
-# Generate code for a Python backend and React frontend.
-protoc --generate=python,react
 
 # Generate proto code into different directories for different languages.
-protoc --
-protoc --python_out=backend/api/
-protoc --resemble_react_out=web/src/gen
+protoc --python=backend/api
+protoc --react=web/src/gen
 
 # Don't cause chaos; it makes it hard to play with the API with e.g. `grpcurl`
 # if that API is constantly going down and coming back up.
