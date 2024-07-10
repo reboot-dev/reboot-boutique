@@ -12,7 +12,7 @@ class ShippingServicer(Shipping.Interface):
         context: WriterContext,
         state: Shipping.State,
         request: demo_pb2.GetQuoteRequest,
-    ) -> Shipping.GetQuoteEffects:
+    ) -> demo_pb2.GetQuoteResponse:
         quote = demo_pb2.ShippingQuote(
             id=str(uuid.uuid4()),
             cost=demo_pb2.Money(
@@ -24,25 +24,21 @@ class ShippingServicer(Shipping.Interface):
 
         state.quotes.append(quote)
 
-        expire_quote_task = self.schedule(
+        await self.lookup().schedule(
             when=timedelta(seconds=request.quote_expiration_seconds),
         ).ExpireQuoteTask(
             context,
             quote=quote,
         )
 
-        return Shipping.GetQuoteEffects(
-            state=state,
-            response=demo_pb2.GetQuoteResponse(quote=quote),
-            tasks=[expire_quote_task],
-        )
+        return demo_pb2.GetQuoteResponse(quote=quote)
 
     async def PrepareShipOrder(
         self,
         context: WriterContext,
         state: Shipping.State,
         request: demo_pb2.PrepareShipOrderRequest,
-    ) -> Shipping.PrepareShipOrderEffects:
+    ) -> demo_pb2.PrepareShipOrderResponse:
         # Remove the quote, unless it is missing implying it has been
         # expired, in which case we raise an error.
         valid_quote = False
@@ -63,22 +59,16 @@ class ShippingServicer(Shipping.Interface):
         # compensatable and if we are called from within a transaction
         # we only want to actually do the shipping if the transaction
         # commits (and thus our task gets dispatched).
-        ship_order_task = self.schedule().ShipOrderTask(context)
+        await self.lookup().schedule().ShipOrderTask(context)
 
-        return Shipping.PrepareShipOrderEffects(
-            state=state,
-            response=demo_pb2.PrepareShipOrderResponse(
-                tracking_id=str(uuid.uuid4()),
-            ),
-            tasks=[ship_order_task],
-        )
+        return demo_pb2.PrepareShipOrderResponse(tracking_id=str(uuid.uuid4()))
 
     async def ExpireQuoteTask(
         self,
         context: WriterContext,
         state: Shipping.State,
         request: demo_pb2.ExpireQuoteTaskRequest,
-    ) -> Shipping.ExpireQuoteTaskEffects:
+    ) -> demo_pb2.Empty:
         # Remove the quote.
         quotes = [
             quote for quote in state.quotes if quote.id != request.quote.id
@@ -86,10 +76,7 @@ class ShippingServicer(Shipping.Interface):
         del state.quotes[:]
         state.quotes.extend(quotes)
 
-        return Shipping.ExpireQuoteTaskEffects(
-            state=state,
-            response=demo_pb2.Empty(),
-        )
+        return demo_pb2.Empty()
 
     async def ShipOrderTask(
         self,

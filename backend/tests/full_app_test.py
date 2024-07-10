@@ -10,7 +10,7 @@ from main import initialize
 from productcatalog.servicer import ProductCatalogServicer
 from resemble.aio.secrets import MockSecretSource, Secrets
 from resemble.aio.tests import Resemble
-from resemble.aio.types import ServiceName
+from resemble.aio.types import ActorId, ServiceName, StateTypeName
 from resemble.aio.workflows import Workflow
 from resemble.integrations.mailgun.servicers import (
     MAILGUN_API_KEY_SECRET_NAME,
@@ -207,7 +207,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # and to pass an actor ID when reaching out to a plain gRPC service.
         async with self.workflow.channel_manager.get_channel_from_service_name(
             ServiceName('boutique.v1.CurrencyConverter'),
-            actor_id='',
+            actor_id=ActorId.from_key(StateTypeName('unused'), 'unused'),
         ) as channel:
             stub = demo_pb2_grpc.CurrencyConverterStub(channel)
             for conversion_request, expected_conversion in test_cases:

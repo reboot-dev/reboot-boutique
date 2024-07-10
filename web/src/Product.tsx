@@ -1,8 +1,8 @@
-import { Product as pb_Product } from "gen/boutique/v1/demo_pb";
 import { useCart, useProductCatalog } from "gen/boutique/v1/demo_rsm_react";
-import { FormEvent, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  CATALOG_SINGLETON_ID,
   productToEntry,
   renderMoney,
   useCurrencyConvertProducts,
@@ -21,36 +21,25 @@ export const Product = ({ cartId, userCurrency }: ProductProps) => {
   const {
     mutators: { addItem },
   } = useCart({ id: cartId });
-  const { getProduct } = useProductCatalog({ id: "product-catalog" });
-  const [product, setProduct] = useState<pb_Product>();
-
-  useEffect(() => {
-    async function runEffect() {
-      const { response: product } = await getProduct({ id: productId });
-      setProduct(product);
-    }
-    runEffect();
-  }, []);
+  const { useGetProduct } = useProductCatalog({
+    id: CATALOG_SINGLETON_ID,
+  });
+  const { response: product } = useGetProduct({ id: productId });
 
   const products = useCurrencyConvertProducts(product, userCurrency);
 
-  if (products.length === 0) return <>Loading...</>;
+  if (products.length === 0) return <div style={{ height: "100vh" }}></div>;
   const productEntry = productToEntry(products[0]);
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    try {
-      await addItem({
-        item: {
-          productId: productEntry.item.id,
-          quantity: +selectedQuantity,
-          addedAt: BigInt(Date.now()),
-        },
-      });
-      navigate("/cart");
-    } catch (e: unknown) {
-      console.log(e);
-    }
+  const handleSubmit = () => {
+    addItem({
+      item: {
+        productId: productEntry.item.id,
+        quantity: +selectedQuantity,
+        addedAt: BigInt(Date.now()),
+      },
+    });
+    navigate("/cart");
   };
 
   return (

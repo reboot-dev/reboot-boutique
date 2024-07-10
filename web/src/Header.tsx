@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { renderCurrencyLogo } from "./helpers";
-import ChaosMonkey from "./static/images/chaos-frontend-moneky.png";
 
 interface HeaderProps {
   frontendMessage: string | null;
@@ -9,7 +7,6 @@ interface HeaderProps {
   userCurrency: string;
   currencies: string[];
   cartSize: number;
-  chaosMonkeyRestarts: number;
   setUserCurrency: (currency: string) => void;
 }
 
@@ -19,11 +16,8 @@ export const Header = ({
   userCurrency,
   currencies,
   cartSize,
-  chaosMonkeyRestarts,
   setUserCurrency,
 }: HeaderProps) => {
-  const [showMonkeyHelper, setShowMonkeyHelper] = useState(false);
-
   return (
     <header>
       {frontendMessage !== undefined && (
@@ -46,36 +40,6 @@ export const Header = ({
             {showCurrency && (
               <div className="h-controls">
                 <div className="h-control">
-                  <img
-                    src={ChaosMonkey}
-                    alt="Chaos Monkey"
-                    height={30}
-                    onMouseEnter={() => setShowMonkeyHelper(true)}
-                    onMouseLeave={() => setShowMonkeyHelper(false)}
-                  />
-                  {showMonkeyHelper && (
-                    <span
-                      style={{
-                        position: "absolute",
-                        backgroundColor: "lightgrey",
-                        right: "101%",
-                        borderRadius: 4,
-                        padding: 4,
-                        width: 100,
-                      }}
-                    >
-                      Chaos Monkey Counter
-                    </span>
-                  )}
-                  <span
-                    style={{
-                      marginLeft: 5,
-                      color: "red",
-                      fontSize: 18,
-                    }}
-                  >
-                    {chaosMonkeyRestarts}
-                  </span>
                   <span className="icon currency-icon">
                     {" "}
                     {renderCurrencyLogo(userCurrency)}
