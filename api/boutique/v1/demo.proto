@@ -17,6 +17,7 @@ syntax = "proto3";
 package boutique.v1;
 
 import "resemble/v1alpha1/options.proto";
+import "google/api/annotations.proto";
 
 // ----------------WORKAROUND--------------------
 // TODO(rjh,riley): for unclear reasons, Buf's `es` protoc plugin can't handle
@@ -221,8 +222,18 @@ message Address {
 
 service CurrencyConverter {
   rpc GetSupportedCurrencies(Empty) returns (GetSupportedCurrenciesResponse) {
+    // This http option allows the frontend to easily address this legacy gRPC
+    // endpoint.
+    option (google.api.http) = {
+      get: "/get_supported_currencies"
+    };
   }
   rpc Convert(CurrencyConversionRequest) returns (CurrencyConversionResponse) {
+    // This http option allows the frontend to easily address this legacy gRPC
+    // endpoint.
+    option (google.api.http) = {
+      post: "/convert"
+    };
   }
 }
 

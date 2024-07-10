@@ -4,7 +4,6 @@ from cart.servicer import CartServicer
 from checkout.servicer import CheckoutServicer
 from constants import CHECKOUT_ACTOR_ID, PRODUCT_CATALOG_ACTOR_ID
 from currencyconverter.servicer import CurrencyConverterServicer
-from logger import logger
 from productcatalog.servicer import ProductCatalogServicer
 from resemble.aio.applications import Application
 from resemble.aio.workflows import Workflow
@@ -23,12 +22,12 @@ servicers: list[type] = [
 
 
 async def initialize(workflow: Workflow):
-    await Checkout.idempotently('initialize').Create(
+    await Checkout.idempotently().Create(
         CHECKOUT_ACTOR_ID,
         workflow,
     )
 
-    await ProductCatalog.idempotently('initialize').LoadProducts(
+    await ProductCatalog.idempotently().LoadProducts(
         PRODUCT_CATALOG_ACTOR_ID,
         workflow,
     )
@@ -40,8 +39,6 @@ async def main():
         servicers=servicers,
         initialize=initialize,
     )
-
-    logger.info('🛒 🛒 🛒 Online Boutique is open for business! 🛍️  🛍️  🛍️  ')
 
     await application.run()
 

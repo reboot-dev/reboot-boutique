@@ -12,6 +12,7 @@ import {
   useShipping,
 } from "gen/boutique/v1/demo_rsm_react";
 import {
+  CATALOG_SINGLETON_ID,
   ProductItem,
   convertedShippingCost,
   renderMoney,
@@ -39,7 +40,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
   const [shippingCost, setShippingCost] = useState<Money>(new Money());
   const [shippingQuote, setShippingQuote] = useState<ShippingQuote>();
   const [email, setEmail] = useState("someone@example.com");
-  const { getProduct } = useProductCatalog({ id: "product-catalog" });
+  const { getProduct } = useProductCatalog({ id: CATALOG_SINGLETON_ID });
   const {
     mutators: { getQuote },
   } = useShipping({ id: "shipping" });
@@ -58,48 +59,48 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
 
   useEffect(() => {
     async function runEffect() {
-      if (useGetItemsResponse !== undefined) {
-        for (const cartItem of useGetItemsResponse.items) {
-          const { response: productDetails } = await getProduct({
-            id: cartItem.productId,
-          });
+      if (useGetItemsResponse === undefined) return;
 
-          if (productDetails !== undefined && cartItem !== undefined) {
+      for (const cartItem of useGetItemsResponse.items) {
+        // For every item in the cart, find the associated product.
+        const { response: productDetails } = await getProduct({
+          id: cartItem.productId,
+        });
+
+        if (productDetails !== undefined && cartItem !== undefined) {
+          setProductItems((productItems) => {
             if (
               !productItems.some(
                 (productItem: ProductItem) =>
                   productItem.product.id === productDetails.id
               )
             ) {
-              setProductItems((productItems) => [
+              return [
                 ...productItems,
                 { product: productDetails, item: cartItem },
-              ]);
+              ];
+            } else {
+              return [...productItems];
             }
-          }
+          });
         }
+      }
 
-        const quote = getQuote({
-          address: USER_ADDRESS,
-          items: useGetItemsResponse.items,
-          quoteExpirationSeconds: 5000,
-        });
+      const { response: quoteDetails } = await getQuote({
+        address: USER_ADDRESS,
+        items: useGetItemsResponse.items,
+        quoteExpirationSeconds: 5000,
+      });
 
-        const { response: quoteDetails } = await getQuote({
-          address: USER_ADDRESS,
-          items: useGetItemsResponse.items,
-          quoteExpirationSeconds: 5000,
-        });
-        if (quoteDetails !== undefined) {
-          if (quoteDetails.quote !== undefined) {
-            setShippingQuote(quoteDetails.quote);
-            if (quoteDetails.quote.cost !== undefined) {
-              convertedShippingCost(quoteDetails.quote.cost, userCurrency).then(
-                (cost: Money) => {
-                  setShippingCost(cost);
-                }
-              );
-            }
+      if (quoteDetails !== undefined) {
+        if (quoteDetails.quote !== undefined) {
+          setShippingQuote(quoteDetails.quote);
+          if (quoteDetails.quote.cost !== undefined) {
+            convertedShippingCost(quoteDetails.quote.cost, userCurrency).then(
+              (cost: Money) => {
+                setShippingCost(cost);
+              }
+            );
           }
         }
       }
@@ -113,7 +114,8 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
     userCurrency
   );
 
-  if (useGetItemsResponse === undefined) return <>Loading...</>;
+  if (useGetItemsResponse === undefined)
+    return <div style={{ height: "100vh" }}></div>;
   const totalCost = totalOrderCost(
     convertedProductItems,
     shippingCost,
@@ -121,8 +123,6 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
   );
 
   const handlePlaceOrder = async () => {
-    // This error is an error that we know about in the backend.
-    // For any other error type, just throw.
     const { aborted } = await placeOrder(
       {
         userId: cartId,
@@ -140,7 +140,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
       { convertedProductItems }
     );
     if (aborted !== undefined) {
-      console.log(aborted);
+      console.warn(aborted);
     }
   };
 

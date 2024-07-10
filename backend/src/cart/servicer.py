@@ -11,7 +11,7 @@ class CartServicer(Cart.Interface):
         context: WriterContext,
         state: Cart.State,
         request: demo_pb2.AddItemRequest,
-    ) -> Cart.AddItemEffects:
+    ) -> demo_pb2.Empty:
 
         now = int(time.time())
 
@@ -20,17 +20,14 @@ class CartServicer(Cart.Interface):
 
         # Re-enable email reminder after we support tasks in transactions.
         # See https://github.com/reboot-dev/respect/issues/2550
-        # email_reminder_task = self.schedule(
+        # email_reminder_task = await self.lookup().schedule(
         #     when=timedelta(minutes=2.),
         # ).EmailReminderTask(
         #     context,
         #     time_of_item_add=now,
         # )
 
-        return Cart.AddItemEffects(
-            response=demo_pb2.Empty(),
-            state=state,
-        )
+        return demo_pb2.Empty()
 
     async def GetItems(
         self,
@@ -45,9 +42,6 @@ class CartServicer(Cart.Interface):
         context: WriterContext,
         state: Cart.State,
         request: demo_pb2.EmptyCartRequest,
-    ) -> Cart.EmptyCartEffects:
+    ) -> demo_pb2.Empty:
         del state.items[:]
-        return Cart.EmptyCartEffects(
-            response=demo_pb2.Empty(),
-            state=state,
-        )
+        return demo_pb2.Empty()

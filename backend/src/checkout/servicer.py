@@ -37,15 +37,15 @@ class CheckoutServicer(Checkout.Interface):
     async def Create(
         self,
         context: WriterContext,
+        state: Checkout.State,
         request: demo_pb2.Empty,
-    ) -> Checkout.CreateEffects:
-        return Checkout.CreateEffects(
-            state=Checkout.State(), response=demo_pb2.Empty()
-        )
+    ) -> demo_pb2.Empty:
+        return demo_pb2.Empty()
 
     async def PlaceOrder(
         self,
         context: TransactionContext,
+        state: Checkout.State,
         request: demo_pb2.PlaceOrderRequest,
     ) -> demo_pb2.PlaceOrderResponse:
         # Get user cart.
@@ -111,14 +111,7 @@ class CheckoutServicer(Checkout.Interface):
             items=order_items
         )
 
-        async def add_order_result(
-            context: WriterContext,
-            state: Checkout.State,
-        ) -> Checkout.Interface.Effects:
-            state.orders.append(order_result)
-            return Checkout.Interface.Effects(state=state)
-
-        await self.write(context, add_order_result)
+        state.orders.append(order_result)
 
         # Use a template in the 'templates' folder.
         env = Environment(

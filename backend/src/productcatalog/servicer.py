@@ -11,15 +11,15 @@ class ProductCatalogServicer(ProductCatalog.Interface):
     async def LoadProducts(
         self,
         context: WriterContext,
+        state: ProductCatalog.State,
         request: demo_pb2.Empty,
-    ) -> ProductCatalog.LoadProductsEffects:
+    ) -> demo_pb2.Empty:
         with open(
             os.path.join(os.path.dirname(__file__), 'products.json'), 'r'
         ) as file:
-            return ProductCatalog.LoadProductsEffects(
-                state=ParseDict(json.load(file), ProductCatalog.State()),
-                response=demo_pb2.Empty(),
-            )
+            state.CopyFrom(ParseDict(json.load(file), ProductCatalog.State()))
+
+        return demo_pb2.Empty()
 
     async def ListProducts(
         self,

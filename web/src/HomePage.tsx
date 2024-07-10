@@ -1,6 +1,7 @@
 import { useProductCatalog } from "gen/boutique/v1/demo_rsm_react";
 import { Link } from "react-router-dom";
 import {
+  CATALOG_SINGLETON_ID,
   ProductEntry,
   productsToEntries,
   renderMoney,
@@ -11,14 +12,15 @@ interface HomePageProps {
   userCurrency: string;
 }
 
-const HomePage = ({ userCurrency }: HomePageProps) => {
-  const { useListProducts } = useProductCatalog({ id: "product-catalog" });
+export const HomePage = ({ userCurrency }: HomePageProps) => {
+  const { useListProducts } = useProductCatalog({ id: CATALOG_SINGLETON_ID });
 
   const { response } = useListProducts();
   const products = useCurrencyConvertProducts(response?.products, userCurrency);
   const productEntries = productsToEntries(products);
 
-  if (productEntries.length === 0) return <>Loading...</>;
+  if (productEntries.length === 0)
+    return <div style={{ height: "100vh" }}></div>;
 
   return (
     <div className="App">
@@ -66,5 +68,3 @@ const HomePage = ({ userCurrency }: HomePageProps) => {
     </div>
   );
 };
-
-export default HomePage;

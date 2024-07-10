@@ -55,21 +55,18 @@ export const PastOrders = ({
               });
               const item = orderItem.item;
               if (productDetails !== undefined) {
-                // This check is required to handle ISSUE: #1727.
-                if (productDetails.hasOwnProperty("id")) {
-                  productItems.push({
-                    product: productDetails,
-                    item: item,
-                  });
-                  const newOrderDetail: {
-                    [id: string]: ProductItem[];
-                  } = {};
-                  newOrderDetail[order.orderId] = productItems;
-                  setOrderDetails((orderDetails) => ({
-                    ...orderDetails,
-                    ...newOrderDetail,
-                  }));
-                }
+                productItems.push({
+                  product: productDetails,
+                  item: item,
+                });
+                const newOrderDetail: {
+                  [id: string]: ProductItem[];
+                } = {};
+                newOrderDetail[order.orderId] = productItems;
+                setOrderDetails((orderDetails) => ({
+                  ...orderDetails,
+                  ...newOrderDetail,
+                }));
               }
             }
           }
