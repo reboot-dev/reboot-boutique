@@ -10,12 +10,9 @@ from main import initialize
 from productcatalog.servicer import ProductCatalogServicer
 from resemble.aio.secrets import MockSecretSource, Secrets
 from resemble.aio.tests import Resemble
-from resemble.aio.types import ActorId, ServiceName, StateTypeName
-from resemble.aio.workflows import Workflow
-from resemble.integrations.mailgun.servicers import (
-    MAILGUN_API_KEY_SECRET_NAME,
-    MockMessageServicer,
-)
+from resemble.aio.types import ServiceName, StateRef, StateTypeName
+from resemble.thirdparty.mailgun import MAILGUN_API_KEY_SECRET_NAME
+from resemble.thirdparty.mailgun.servicers import MockMessageServicer
 from shipping.servicer import ShippingServicer
 
 # Any arbitrary mailgun API key works for the `MockMessageServicer`.
@@ -50,11 +47,11 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
             in_process=True,
         )
 
-        self.workflow: Workflow = self.rsm.create_workflow(
+        self.context = self.rsm.create_external_context(
             name=f"test-{self.id()}"
         )
 
-        await initialize(self.workflow)
+        await initialize(self.context)
 
     async def asyncTearDown(self) -> None:
         await self.rsm.stop()
@@ -64,7 +61,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # Add an item to a cart.
         cart = Cart.lookup('jonathan')
         await cart.AddItem(
-            self.workflow,
+            self.context,
             item=demo_pb2.CartItem(
                 product_id='OLJCESPC7Z',
                 quantity=42,
@@ -74,7 +71,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # Get a shipping quote for that card in preparation for checkout.
         shipping = Shipping.lookup(SHIPPING_ACTOR_ID)
         get_quote_response = await shipping.GetQuote(
-            self.workflow,
+            self.context,
             quote_expiration_seconds=30,
         )
 
@@ -82,7 +79,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         checkout = Checkout.lookup(CHECKOUT_ACTOR_ID)
 
         place_order_response = await checkout.PlaceOrder(
-            self.workflow,
+            self.context,
             user_id='jonathan',
             user_currency='USD',
             email='hi@reboot.dev',
@@ -111,11 +108,11 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         )
 
         # The cart must have been emptied.
-        get_items_response = await cart.GetItems(self.workflow)
+        get_items_response = await cart.GetItems(self.context)
         self.assertEqual(len(get_items_response.items), 0)
 
         # The order must have been registered.
-        orders_response = await checkout.Orders(self.workflow)
+        orders_response = await checkout.Orders(self.context)
         self.assertEqual(len(orders_response.orders), 1)
         self.assertEqual(
             orders_response.orders[0].order_id,
@@ -128,7 +125,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # Add an item to a cart.
         cart = Cart.lookup('jonathan')
         await cart.AddItem(
-            self.workflow,
+            self.context,
             item=demo_pb2.CartItem(
                 product_id='OLJCESPC7Z',
                 quantity=42,
@@ -139,7 +136,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # Use an expiration time of 0 so that the quote will expire immediately.
         shipping = Shipping.lookup(SHIPPING_ACTOR_ID)
         get_quote_response = await shipping.GetQuote(
-            self.workflow,
+            self.context,
             quote_expiration_seconds=0,
         )
 
@@ -151,7 +148,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
 
         with self.assertRaises(Checkout.PlaceOrderAborted) as aborted:
             await checkout.PlaceOrder(
-                self.workflow,
+                self.context,
                 user_id='jonathan',
                 user_currency='USD',
                 email='hi@reboot.dev',
@@ -174,11 +171,11 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
                             price=demo_pb2.Money(
                                 currency_code='USD',
                                 units=8,
-                                nanos=(99 * 10000000)
+                                nanos=(99 * 10000000),
                             ),
                         )
                     ],
-                    to_code='USD'
+                    to_code='USD',
                 ),
                 demo_pb2.Money(
                     currency_code='USD', units=8, nanos=(99 * 10000000)
@@ -198,16 +195,16 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
                 demo_pb2.Money(
                     currency_code='USD',
                     units=1,
-                    nanos=int(0.1305 * 1000000000)
+                    nanos=int(0.1305 * 1000000000),
                 )
             )
         ]
 
         # TODO(rjh): remove the need for us to reach into the channel manager
         # and to pass an actor ID when reaching out to a plain gRPC service.
-        async with self.workflow.channel_manager.get_channel_from_service_name(
+        async with self.context.channel_manager.get_channel_from_service_name(
             ServiceName('boutique.v1.CurrencyConverter'),
-            actor_id=ActorId.from_key(StateTypeName('unused'), 'unused'),
+            state_ref=StateRef.from_id(StateTypeName('unused'), 'unused'),
         ) as channel:
             stub = demo_pb2_grpc.CurrencyConverterStub(channel)
             for conversion_request, expected_conversion in test_cases:

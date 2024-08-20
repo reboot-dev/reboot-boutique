@@ -18,9 +18,7 @@ export const Product = ({ cartId, userCurrency }: ProductProps) => {
   const navigate = useNavigate();
   const [selectedQuantity, setSelectedQuantity] = useState("1");
 
-  const {
-    mutators: { addItem },
-  } = useCart({ id: cartId });
+  const { addItem } = useCart({ id: cartId });
   const { useGetProduct } = useProductCatalog({
     id: CATALOG_SINGLETON_ID,
   });

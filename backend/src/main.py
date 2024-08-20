@@ -1,4 +1,5 @@
 import asyncio
+import resemble.thirdparty.mailgun
 from boutique.v1.demo_rsm import Checkout, ProductCatalog
 from cart.servicer import CartServicer
 from checkout.servicer import CheckoutServicer
@@ -6,8 +7,7 @@ from constants import CHECKOUT_ACTOR_ID, PRODUCT_CATALOG_ACTOR_ID
 from currencyconverter.servicer import CurrencyConverterServicer
 from productcatalog.servicer import ProductCatalogServicer
 from resemble.aio.applications import Application
-from resemble.aio.workflows import Workflow
-from resemble.integrations.mailgun.servicers import MessageServicer
+from resemble.aio.external import ExternalContext
 from shipping.servicer import ShippingServicer
 
 # All of the servicers that we need to run!
@@ -16,21 +16,18 @@ servicers: list[type] = [
     CartServicer,
     CheckoutServicer,
     ShippingServicer,
-    MessageServicer,
     CurrencyConverterServicer,
-]
+] + resemble.thirdparty.mailgun.servicers()
 
 
-async def initialize(workflow: Workflow):
-    await Checkout.idempotently().Create(
-        CHECKOUT_ACTOR_ID,
-        workflow,
-    )
+async def initialize(context: ExternalContext):
+    await Checkout.construct(
+        id=CHECKOUT_ACTOR_ID,
+    ).idempotently().Create(context)
 
-    await ProductCatalog.idempotently().LoadProducts(
-        PRODUCT_CATALOG_ACTOR_ID,
-        workflow,
-    )
+    await ProductCatalog.construct(
+        id=PRODUCT_CATALOG_ACTOR_ID,
+    ).idempotently().LoadProducts(context)
 
 
 async def main():
