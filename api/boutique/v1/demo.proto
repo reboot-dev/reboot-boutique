@@ -27,7 +27,7 @@ import "google/api/annotations.proto";
 
 message TaskId {
   string service = 1;
-  string actor_id = 2;
+  string state_ref = 2;
   bytes task_uuid = 3;
 }
 

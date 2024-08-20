@@ -41,17 +41,9 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
   const [shippingQuote, setShippingQuote] = useState<ShippingQuote>();
   const [email, setEmail] = useState("someone@example.com");
   const { getProduct } = useProductCatalog({ id: CATALOG_SINGLETON_ID });
-  const {
-    mutators: { getQuote },
-  } = useShipping({ id: "shipping" });
-  const {
-    useOrders,
-    mutators: { placeOrder },
-  } = useCheckout({ id: "checkout" });
-  const {
-    useGetItems,
-    mutators: { emptyCart },
-  } = useCart({ id: cartId });
+  const { getQuote } = useShipping({ id: "shipping" });
+  const { useOrders, placeOrder } = useCheckout({ id: "checkout" });
+  const { useGetItems, emptyCart } = useCart({ id: cartId });
 
   const { response: useOrdersResponse } = useOrders();
 

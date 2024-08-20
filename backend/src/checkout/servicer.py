@@ -12,8 +12,8 @@ from resemble.aio.contexts import (
     WriterContext,
 )
 from resemble.aio.secrets import Secrets
-from resemble.integrations.mailgun.servicers import MAILGUN_API_KEY_SECRET_NAME
-from resemble.integrations.mailgun.v1.mailgun_rsm import Message
+from resemble.thirdparty.mailgun import MAILGUN_API_KEY_SECRET_NAME
+from resemble.thirdparty.mailgun.v1.mailgun_rsm import Message
 from typing import Optional
 
 
@@ -108,7 +108,7 @@ class CheckoutServicer(Checkout.Interface):
             order_id=order_id,
             shipping_cost=request.quote.cost,
             shipping_address=request.address,
-            items=order_items
+            items=order_items,
         )
 
         state.orders.append(order_result)
@@ -118,7 +118,7 @@ class CheckoutServicer(Checkout.Interface):
             loader=FileSystemLoader(
                 os.path.join(os.path.dirname(__file__), 'templates')
             ),
-            autoescape=select_autoescape(['html', 'xml'])
+            autoescape=select_autoescape(['html', 'xml']),
         )
         template = env.get_template('thanks_for_listening_to_demo.html')
 
@@ -129,8 +129,7 @@ class CheckoutServicer(Checkout.Interface):
                 MAILGUN_API_KEY_SECRET_NAME
             )
 
-            await Message.Send(
-                str(uuid.uuid4()),
+            await Message.construct().Send(
                 context,
                 Options(bearer_token=mailgun_api_key.decode()),
                 recipient=request.email,

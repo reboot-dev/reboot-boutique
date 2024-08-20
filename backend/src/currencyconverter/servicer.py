@@ -53,7 +53,7 @@ class CurrencyConverterServicer(demo_pb2_grpc.CurrencyConverterServicer):
                         currency_code=request.to_code,
                         units=int(total_nanos_converted / NANOS_CONVERSION),
                         nanos=int(total_nanos_converted % NANOS_CONVERSION)
-                    )
+                    ),
                 )
             )
 
