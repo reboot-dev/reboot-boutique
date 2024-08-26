@@ -61,49 +61,45 @@ class CheckoutServicer(Checkout.Interface):
         order_items: list[demo_pb2.OrderItem] = []
         async with context.legacy_grpc_channel() as channel:
             stub = demo_pb2_grpc.CurrencyConverterStub(channel)
-            for item in get_items_response.items:
-                product_info = await product_catalog.GetProduct(
-                    context,
-                    id=item.product_id,
-                )
-
-                conversion_request = demo_pb2.CurrencyConversionRequest(
-                    products=[product_info],
+            convert_response = await stub.Convert(
+                demo_pb2.CurrencyConversionRequest(
+                    products=[
+                        (
+                            await product_catalog.GetProduct(
+                                context,
+                                id=item.product_id,
+                            )
+                        ) for item in get_items_response.items
+                    ],
                     to_code=request.user_currency,
                 )
-                converted_product = await stub.Convert(conversion_request)
+            )
 
+            for item, product in zip(
+                get_items_response.items, convert_response.products
+            ):
                 order_items.append(
                     demo_pb2.OrderItem(
                         item=item,
-                        cost=converted_product.products[0].price,
+                        cost=product.price,
                     )
                 )
 
-        order_id = str(uuid.uuid4())
+        # TODO: Total up the price for the user.
+        # TODO: Charge the user's credit card.
 
         # Prepare the shipping.
-        #
-        # NOTE: WE MUST PREPARE THE SHIPPING FIRST BECAUSE WE "RETURN"
-        # ERRORS THAT ARE NOT SEEN AS FAILURES SO THE TRANSACTION WILL
-        # COMMIT!
         shipping = Shipping.lookup(SHIPPING_ACTOR_ID)
-
         await shipping.PrepareShipOrder(
             context,
             quote=request.quote,
         )
 
-        # TODO: convert request.quote.cost to user currency.
-
-        # TODO: Total up the price for the user.
-
-        # TODO: Charge the user's credit card.
-
         # Empty the user's cart.
         await cart.EmptyCart(context)
 
         # Send a confirmation email to the user.
+        order_id = str(uuid.uuid4())
         order_result = demo_pb2.OrderResult(
             order_id=order_id,
             shipping_cost=request.quote.cost,

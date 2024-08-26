@@ -15,17 +15,21 @@ class CartServicer(Cart.Interface):
 
         now = int(time.time())
 
-        request.item.added_at = now
-        state.items.append(request.item)
-
-        # Re-enable email reminder after we support tasks in transactions.
-        # See https://github.com/reboot-dev/respect/issues/2550
-        # email_reminder_task = await self.lookup().schedule(
-        #     when=timedelta(minutes=2.),
-        # ).EmailReminderTask(
-        #     context,
-        #     time_of_item_add=now,
-        # )
+        # If the item was already in the cart, increase the count instead of
+        # adding it again.
+        previous_item = next(
+            (
+                item for item in state.items
+                if item.product_id == request.item.product_id
+            ),
+            None,
+        )
+        if previous_item is not None:
+            previous_item.quantity += request.item.quantity
+            previous_item.added_at = now
+        else:
+            request.item.added_at = now
+            state.items.append(request.item)
 
         return demo_pb2.Empty()
 
