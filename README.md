@@ -14,12 +14,12 @@ It was originally forked from
 [GoogleCloudPlatform/microservices-demo](https://github.com/GoogleCloudPlatform/microservices-demo),
 and demonstrates how Resemble makes it simple to write correct microservice applications.
 
-The [Resemble '.proto' definition](https://docs.reboot.dev/docs/learn/overview#generated-code)
+The [Resemble '.proto' definition](https://docs.reboot.dev/develop/schema#code-generation)
 can be found in the `api/` directory, grouped into
 subdirectories by proto package, while backend specific code can be
 found in `backend/` and front end specific code in `web/`.
 
-_For more information on all of the Resemble examples, please [see the docs](https://docs.reboot.dev/docs/get_started/examples)._
+_For more information on all of the Resemble examples, please [see the docs](https://docs.reboot.dev/get_started/examples)._
 
 ## Prepare an environment by...
 
@@ -90,7 +90,7 @@ echo -n "MY_MAILGUN_API_KEY" >secrets/mailgun-api-key
 ```
 
 If you are using Reboot Cloud, read
-[the documentation about `rsm secret`](https://docs.reboot.dev/docs/concepts/secrets) to
+[the documentation about `rsm cloud secret`](https://docs.reboot.dev/develop/secrets) to
 learn how to set a secret.
 
 #### Run the backend
