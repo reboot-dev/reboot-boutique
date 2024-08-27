@@ -15,6 +15,7 @@ import {
   CATALOG_SINGLETON_ID,
   ProductItem,
   convertedShippingCost,
+  multiplyMoney,
   renderMoney,
   totalOrderCost,
   useCurrencyConvertProductItems,
@@ -53,30 +54,16 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
     async function runEffect() {
       if (useGetItemsResponse === undefined) return;
 
+      let nextProductItems = [];
       for (const cartItem of useGetItemsResponse.items) {
         // For every item in the cart, find the associated product.
         const { response: productDetails } = await getProduct({
           id: cartItem.productId,
         });
-
-        if (productDetails !== undefined && cartItem !== undefined) {
-          setProductItems((productItems) => {
-            if (
-              !productItems.some(
-                (productItem: ProductItem) =>
-                  productItem.product.id === productDetails.id
-              )
-            ) {
-              return [
-                ...productItems,
-                { product: productDetails, item: cartItem },
-              ];
-            } else {
-              return [...productItems];
-            }
-          });
-        }
+        if (productDetails === undefined) continue;
+        nextProductItems.push({ product: productDetails, item: cartItem });
       }
+      setProductItems(nextProductItems);
 
       const { response: quoteDetails } = await getQuote({
         address: USER_ADDRESS,
@@ -203,7 +190,12 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
                         </div>
                         <div className="col pr-md-0 text-right">
                           <strong>
-                            {renderMoney(productItem.product.price)}
+                            {renderMoney(
+                              multiplyMoney(
+                                productItem.product.price,
+                                productItem.item.quantity
+                              )
+                            )}
                           </strong>
                         </div>
                       </div>

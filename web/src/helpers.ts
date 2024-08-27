@@ -137,7 +137,8 @@ export const totalOrderCost = (
   });
 };
 
-export const multiplyMoney = (money: Money, multiplier: number) => {
+export const multiplyMoney = (money: Money | undefined, multiplier: number) => {
+  if (money === undefined) return undefined;
   const moneyValue = Number(renderMoney(money).substring(1));
   const multipliedValue = moneyValue * multiplier;
   return new Money({
