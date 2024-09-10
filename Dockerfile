@@ -23,4 +23,5 @@ RUN rsm protoc
 COPY backend/src/ backend/src/
 
 # Running the application requires that we set the PYTHONPATH correctly.
+# TODO: Update to use `rsm serve`.
 CMD PYTHONPATH=backend/api/ python3 backend/src/main.py
