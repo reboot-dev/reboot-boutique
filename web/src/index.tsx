@@ -1,7 +1,4 @@
-import {
-  ResembleClient,
-  ResembleClientProvider,
-} from "@reboot-dev/resemble-react";
+import { RebootClient, RebootClientProvider } from "@reboot-dev/reboot-react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
@@ -12,16 +9,16 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-const client = new ResembleClient(
-  process.env.REACT_APP_REBOOT_RESEMBLE_ENDPOINT as string
+const client = new RebootClient(
+  process.env.REACT_APP_REBOOT_ENDPOINT as string
 );
 
 root.render(
-  <ResembleClientProvider client={client}>
+  <RebootClientProvider client={client}>
     <BrowserRouter basename="/">
       <App />
     </BrowserRouter>
-  </ResembleClientProvider>
+  </RebootClientProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

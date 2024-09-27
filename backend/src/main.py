@@ -1,13 +1,13 @@
 import asyncio
-import resemble.thirdparty.mailgun
-from boutique.v1.demo_rsm import Checkout, ProductCatalog
+import reboot.thirdparty.mailgun
+from boutique.v1.demo_rbt import Checkout, ProductCatalog
 from cart.servicer import CartServicer
 from checkout.servicer import CheckoutServicer
 from constants import CHECKOUT_ACTOR_ID, PRODUCT_CATALOG_ACTOR_ID
 from currencyconverter.servicer import CurrencyConverterServicer
 from productcatalog.servicer import ProductCatalogServicer
-from resemble.aio.applications import Application, Servicer
-from resemble.aio.external import ExternalContext
+from reboot.aio.applications import Application, Servicer
+from reboot.aio.external import ExternalContext
 from shipping.servicer import ShippingServicer
 
 # All of the servicers that we need to run!
@@ -16,7 +16,7 @@ servicers: list[type[Servicer]] = [
     CartServicer,
     CheckoutServicer,
     ShippingServicer,
-] + resemble.thirdparty.mailgun.servicers()
+] + reboot.thirdparty.mailgun.servicers()
 
 legacy_grpc_servicers: list[type] = [
     CurrencyConverterServicer,

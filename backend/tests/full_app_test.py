@@ -1,18 +1,18 @@
 import asyncio
 import unittest
 from boutique.v1 import demo_pb2, demo_pb2_grpc
-from boutique.v1.demo_rsm import Cart, Checkout, Shipping
+from boutique.v1.demo_rbt import Cart, Checkout, Shipping
 from cart.servicer import CartServicer
 from checkout.servicer import CheckoutServicer
 from constants import CHECKOUT_ACTOR_ID, SHIPPING_ACTOR_ID
 from currencyconverter.servicer import CurrencyConverterServicer
 from main import initialize
 from productcatalog.servicer import ProductCatalogServicer
-from resemble.aio.secrets import MockSecretSource, Secrets
-from resemble.aio.tests import Resemble
-from resemble.aio.types import ServiceName, StateRef, StateTypeName
-from resemble.thirdparty.mailgun import MAILGUN_API_KEY_SECRET_NAME
-from resemble.thirdparty.mailgun.servicers import MockMessageServicer
+from reboot.aio.secrets import MockSecretSource, Secrets
+from reboot.aio.tests import Reboot
+from reboot.aio.types import ServiceName, StateRef, StateTypeName
+from reboot.thirdparty.mailgun import MAILGUN_API_KEY_SECRET_NAME
+from reboot.thirdparty.mailgun.servicers import MockMessageServicer
 from shipping.servicer import ShippingServicer
 
 # Any arbitrary mailgun API key works for the `MockMessageServicer`.
@@ -30,7 +30,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
             )
         )
 
-        self.rsm = Resemble()
+        self.rbt = Reboot()
         servicers: list[type] = [
             ProductCatalogServicer,
             CartServicer,
@@ -40,21 +40,21 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
             CurrencyConverterServicer,
         ]
 
-        await self.rsm.start()
-        self.config = await self.rsm.up(
+        await self.rbt.start()
+        self.config = await self.rbt.up(
             servicers=servicers,
             # Mocking `Secrets` requires running in process.
             in_process=True,
         )
 
-        self.context = self.rsm.create_external_context(
+        self.context = self.rbt.create_external_context(
             name=f"test-{self.id()}"
         )
 
         await initialize(self.context)
 
     async def asyncTearDown(self) -> None:
-        await self.rsm.stop()
+        await self.rbt.stop()
 
     async def test_checkout(self) -> None:
         """Check out a single item successfully."""

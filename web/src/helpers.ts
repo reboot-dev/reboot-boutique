@@ -30,7 +30,7 @@ export const convertedShippingCost = async (
     price: cost,
   };
   const response = await fetch(
-    `${process.env.REACT_APP_REBOOT_RESEMBLE_ENDPOINT}/convert`,
+    `${process.env.REACT_APP_REBOOT_ENDPOINT}/convert`,
     {
       method: "POST",
       body: JSON.stringify({
@@ -58,7 +58,7 @@ export const useCurrencyConvertProductItems = (
     if (userCurrency === "USD") {
       setConvertedProductItems(productItems);
     } else {
-      fetch(`${process.env.REACT_APP_REBOOT_RESEMBLE_ENDPOINT}/convert`, {
+      fetch(`${process.env.REACT_APP_REBOOT_ENDPOINT}/convert`, {
         method: "POST",
         body: JSON.stringify({
           products: productItems.map(
@@ -101,7 +101,7 @@ export const useCurrencyConvertProducts = (
     if (userCurrency === "USD") {
       setConvertedProducts(products);
     } else {
-      fetch(`${process.env.REACT_APP_REBOOT_RESEMBLE_ENDPOINT}/convert`, {
+      fetch(`${process.env.REACT_APP_REBOOT_ENDPOINT}/convert`, {
         method: "POST",
         body: JSON.stringify({
           products: products,

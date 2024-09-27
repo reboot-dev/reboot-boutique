@@ -1,19 +1,19 @@
 import os
 import uuid
 from boutique.v1 import demo_pb2, demo_pb2_grpc
-from boutique.v1.demo_rsm import Cart, Checkout, ProductCatalog, Shipping
+from boutique.v1.demo_rbt import Cart, Checkout, ProductCatalog, Shipping
 from constants import PRODUCT_CATALOG_ACTOR_ID, SHIPPING_ACTOR_ID
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from logger import logger
-from resemble.aio.call import Options
-from resemble.aio.contexts import (
+from rbt.thirdparty.mailgun.v1.mailgun_rbt import Message
+from reboot.aio.call import Options
+from reboot.aio.contexts import (
     ReaderContext,
     TransactionContext,
     WriterContext,
 )
-from resemble.aio.secrets import Secrets
-from resemble.thirdparty.mailgun import MAILGUN_API_KEY_SECRET_NAME
-from resemble.thirdparty.mailgun.v1.mailgun_rsm import Message
+from reboot.aio.secrets import Secrets
+from reboot.thirdparty.mailgun import MAILGUN_API_KEY_SECRET_NAME
 from typing import Optional
 
 

@@ -1,8 +1,8 @@
 import uuid
 from boutique.v1 import demo_pb2
-from boutique.v1.demo_rsm import Shipping
+from boutique.v1.demo_rbt import Shipping
 from datetime import timedelta
-from resemble.aio.contexts import ReaderContext, WriterContext
+from reboot.aio.contexts import ReaderContext, WriterContext
 
 
 class ShippingServicer(Shipping.Interface):
