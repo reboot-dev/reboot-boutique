@@ -10,7 +10,7 @@ import {
   useCheckout,
   useProductCatalog,
   useShipping,
-} from "gen/boutique/v1/demo_rsm_react";
+} from "gen/boutique/v1/demo_rbt_react";
 import {
   CATALOG_SINGLETON_ID,
   ProductItem,

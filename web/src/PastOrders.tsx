@@ -1,5 +1,5 @@
 import { PartialMessage } from "@bufbuild/protobuf";
-import type { ResponseOrAborted } from "@reboot-dev/resemble-react";
+import type { ResponseOrAborted } from "@reboot-dev/reboot-react";
 import {
   GetProductRequest,
   OrderResult,
@@ -7,7 +7,7 @@ import {
   PlaceOrderRequest,
   Product,
 } from "gen/boutique/v1/demo_pb";
-import { ProductCatalogGetProductAborted } from "gen/boutique/v1/demo_rsm_react";
+import { ProductCatalogGetProductAborted } from "gen/boutique/v1/demo_rbt_react";
 import {
   ProductItem,
   multiplyMoney,

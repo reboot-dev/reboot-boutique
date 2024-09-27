@@ -1,5 +1,5 @@
-# Directory created from using the 'rsm' CLI tool.
-/.rsm/
+# Directory created from using the 'rbt' CLI tool.
+/.rbt/
 
 # The recommended virtualenv directory.
 /.venv/
@@ -13,7 +13,7 @@
 # empty `gen/` directory anymore, remove that directory here also.
 /backend/api/
 boilerplate/
-.unpublished-resemble-wheel/
+.unpublished-reboot-wheel/
 
 # Secrets.
 /backend/secrets/*
