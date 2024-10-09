@@ -12,7 +12,7 @@ from reboot.aio.contexts import (
     TransactionContext,
     WriterContext,
 )
-from reboot.aio.secrets import Secrets
+from reboot.aio.secrets import SecretNotFoundException, Secrets
 from reboot.thirdparty.mailgun import MAILGUN_API_KEY_SECRET_NAME
 from typing import Optional
 
@@ -20,19 +20,7 @@ from typing import Optional
 class CheckoutServicer(Checkout.Interface):
 
     def __init__(self):
-        try:
-            self._secrets: Optional[Secrets] = Secrets()
-        except:
-            # TODO(rjh,stuhood): remove this when secrets are supported on the
-            #                    Cloud.
-            # TODO(rjh,stuhood): make an error reading the Cloud API key more
-            #                    specific than `Exception` so this use case
-            #                    doesn't need to catch everything?
-            logger.warning(
-                "Failed to get secrets access, probably because secrets are "
-                "not supported on the Reboot Cloud yet. Will not use secrets."
-            )
-            self._secrets = None
+        self._secrets = Secrets()
 
     async def Create(
         self,
@@ -120,25 +108,15 @@ class CheckoutServicer(Checkout.Interface):
 
         confirmation = template.render(order=order_result)
 
-        if self._secrets is not None:
-            mailgun_api_key = await self._secrets.get(
-                MAILGUN_API_KEY_SECRET_NAME
-            )
-
+        if mailgun_api_key := await self._mailgun_api_key():
             await Message.construct().Send(
                 context,
-                Options(bearer_token=mailgun_api_key.decode()),
+                Options(bearer_token=mailgun_api_key),
                 recipient=request.email,
                 sender='Reboot Team <team@reboot.dev>',
                 domain='reboot.dev',
                 subject='Thanks from the team at reboot.dev!',
                 html=confirmation,
-            )
-        else:
-            # TODO(rjh,stuhood): remove this when secrets are supported on the
-            #                    Cloud.
-            logger.warning(
-                "No secrets available. Will not send order confirmation email."
             )
         logger.info(f"Order placed for '{request.email}'")
 
@@ -151,3 +129,14 @@ class CheckoutServicer(Checkout.Interface):
         request: demo_pb2.OrdersRequest,
     ) -> demo_pb2.OrdersResponse:
         return demo_pb2.OrdersResponse(orders=reversed(state.orders))
+
+    async def _mailgun_api_key(self) -> Optional[str]:
+        try:
+            secret_bytes = await self._secrets.get(MAILGUN_API_KEY_SECRET_NAME)
+            return secret_bytes.decode()
+        except SecretNotFoundException:
+            logger.warning(
+                "The Mailgun API key secret is not set: please see the README to "
+                "enable sending email."
+            )
+            return None

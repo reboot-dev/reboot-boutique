@@ -35,21 +35,21 @@ message TaskId {
 
 service CartInterface {
   rpc AddItem(AddItemRequest) returns (Empty) {
-    option (.rbt.v1alpha1.method).writer = {
+    option (rbt.v1alpha1.method).writer = {
     };
   }
   rpc GetItems(GetItemsRequest) returns (GetItemsResponse) {
-    option (.rbt.v1alpha1.method).reader = {
+    option (rbt.v1alpha1.method).reader = {
     };
   }
   rpc EmptyCart(EmptyCartRequest) returns (Empty) {
-    option (.rbt.v1alpha1.method).writer = {
+    option (rbt.v1alpha1.method).writer = {
     };
   }
 }
 
 message Cart {
-  option (.rbt.v1alpha1.state) = {
+  option (rbt.v1alpha1.state) = {
   };
   repeated CartItem items = 1;
 }
@@ -93,27 +93,27 @@ message ListRecommendationsResponse {
 // ---------------Product Catalog----------------
 
 message ProductCatalog {
-  option (.rbt.v1alpha1.state) = {
+  option (rbt.v1alpha1.state) = {
   };
   repeated Product products = 1;
 }
 
 service ProductCatalogInterface {
   rpc LoadProducts(Empty) returns (Empty) {
-    option (.rbt.v1alpha1.method).writer = {
+    option (rbt.v1alpha1.method).writer = {
       constructor: {},
     };
   }
   rpc ListProducts(Empty) returns (ListProductsResponse) {
-    option (.rbt.v1alpha1.method).reader = {
+    option (rbt.v1alpha1.method).reader = {
     };
   }
   rpc GetProduct(GetProductRequest) returns (Product) {
-    option (.rbt.v1alpha1.method).reader = {
+    option (rbt.v1alpha1.method).reader = {
     };
   }
   rpc SearchProducts(SearchProductsRequest) returns (SearchProductsResponse) {
-    option (.rbt.v1alpha1.method).reader = {
+    option (rbt.v1alpha1.method).reader = {
     };
   }
 }
@@ -154,7 +154,7 @@ message ShippingQuote {
 }
 
 message Shipping {
-  option (.rbt.v1alpha1.state) = {
+  option (rbt.v1alpha1.state) = {
   };
   repeated ShippingQuote quotes = 1;
 }
@@ -297,20 +297,20 @@ message ChargeResponse {
 
 service CheckoutInterface {
   rpc Create(Empty) returns (Empty) {
-    option (.rbt.v1alpha1.method).writer = {
+    option (rbt.v1alpha1.method).writer = {
       constructor: {},
     };
   }
 
   rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse) {
-    option (.rbt.v1alpha1.method) = {
+    option (rbt.v1alpha1.method) = {
       transaction: {},
       errors: [ "ShippingQuoteInvalidOrExpired" ],
     };
   }
 
   rpc Orders(OrdersRequest) returns (OrdersResponse) {
-    option (.rbt.v1alpha1.method).reader = {
+    option (rbt.v1alpha1.method).reader = {
     };
   }
 }
@@ -328,7 +328,7 @@ message OrderResult {
 }
 
 message Checkout {
-  option (.rbt.v1alpha1.state) = {
+  option (rbt.v1alpha1.state) = {
   };
   repeated OrderResult orders = 3;
 }

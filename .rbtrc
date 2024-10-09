@@ -49,8 +49,5 @@ cloud down --name=boutique
 dev expunge --name=boutique
 dev run --name=boutique
 
-# Tell `rbt` where the secrets directory is located.
-dev run --secrets-directory=./backend/secrets
-
 # Run the application!
-dev run backend/src/main.py
+dev run --application=backend/src/main.py
