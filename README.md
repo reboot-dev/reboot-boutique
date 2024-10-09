@@ -73,25 +73,16 @@ rye sync --no-lock
 source .venv/bin/activate
 ```
 
-#### Setup secrets
+#### (optional) Setup secrets
 
-To start the Reboot boutique backend you need to make sure you have
-secrets in place; you need the `mailgun-api-key` secret in the
-directory `backend/secrets`.
-
-```shell
-mkdir secrets
-```
+To demonstrate sending emails in the boutique you'll need to export your Mailgun
+API key as an environment variable.
 
 Replace `MY_MAILGUN_API_KEY` with your own mailgun API key, which you can get
 from [your Mailgun account](https://www.mailgun.com):
 ```shell
-echo -n "MY_MAILGUN_API_KEY" >secrets/mailgun-api-key
+export RBT_SECRET_MAILGUN_API_KEY="MY_MAILGUN_API_KEY"
 ```
-
-If you are using Reboot Cloud, read
-[the documentation about `rbt cloud secret`](https://docs.reboot.dev/develop/secrets) to
-learn how to set a secret.
 
 #### Run the backend
 
