@@ -4,6 +4,10 @@
 # The recommended virtualenv directory.
 /.venv/
 
+# Temporary directories produced by `python`.
+__pycache__/
+.pytest_cache/
+
 # Generated .ts files.
 /web/src/gen/*
 
@@ -14,6 +18,3 @@
 /backend/api/
 boilerplate/
 .unpublished-reboot-wheel/
-
-# Secrets.
-/backend/secrets/*
