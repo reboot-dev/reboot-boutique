@@ -1,5 +1,5 @@
 import logging
-from respect.logging import formatter
+from reboot.log import formatter
 
 stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(formatter)

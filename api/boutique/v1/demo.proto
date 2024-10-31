@@ -33,7 +33,7 @@ message TaskId {
 
 // -----------------Cart service-----------------
 
-service CartInterface {
+service CartMethods {
   rpc AddItem(AddItemRequest) returns (Empty) {
     option (rbt.v1alpha1.method).writer = {
     };
@@ -98,7 +98,7 @@ message ProductCatalog {
   repeated Product products = 1;
 }
 
-service ProductCatalogInterface {
+service ProductCatalogMethods {
   rpc LoadProducts(Empty) returns (Empty) {
     option (rbt.v1alpha1.method).writer = {
       constructor: {},
@@ -159,7 +159,7 @@ message Shipping {
   repeated ShippingQuote quotes = 1;
 }
 
-service ShippingInterface {
+service ShippingMethods {
   rpc GetQuote(GetQuoteRequest) returns (GetQuoteResponse) {
     option (rbt.v1alpha1.method).writer = {
     };
@@ -295,7 +295,7 @@ message ChargeResponse {
 
 // -------------Checkout service-----------------
 
-service CheckoutInterface {
+service CheckoutMethods {
   rpc Create(Empty) returns (Empty) {
     option (rbt.v1alpha1.method).writer = {
       constructor: {},

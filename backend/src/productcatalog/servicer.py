@@ -6,7 +6,7 @@ from google.protobuf.json_format import ParseDict
 from reboot.aio.contexts import ReaderContext, WriterContext
 
 
-class ProductCatalogServicer(ProductCatalog.Interface):
+class ProductCatalogServicer(ProductCatalog.Servicer):
 
     async def LoadProducts(
         self,

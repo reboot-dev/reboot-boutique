@@ -5,7 +5,7 @@ from datetime import timedelta
 from reboot.aio.contexts import ReaderContext, WriterContext
 
 
-class ShippingServicer(Shipping.Interface):
+class ShippingServicer(Shipping.Servicer):
 
     async def GetQuote(
         self,
