@@ -4,7 +4,7 @@ from boutique.v1.demo_rbt import Cart
 from reboot.aio.contexts import ReaderContext, WriterContext
 
 
-class CartServicer(Cart.Interface):
+class CartServicer(Cart.Servicer):
 
     async def AddItem(
         self,

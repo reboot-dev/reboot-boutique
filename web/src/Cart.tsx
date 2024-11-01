@@ -116,7 +116,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
         quote: shippingQuote,
         email,
       },
-      { convertedProductItems }
+      { metadata: convertedProductItems }
     );
     if (aborted !== undefined) {
       console.warn(aborted);

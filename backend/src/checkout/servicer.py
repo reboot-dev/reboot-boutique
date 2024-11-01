@@ -17,7 +17,7 @@ from reboot.thirdparty.mailgun import MAILGUN_API_KEY_SECRET_NAME
 from typing import Optional
 
 
-class CheckoutServicer(Checkout.Interface):
+class CheckoutServicer(Checkout.Servicer):
 
     def __init__(self):
         self._secrets = Secrets()
