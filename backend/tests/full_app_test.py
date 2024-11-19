@@ -10,7 +10,7 @@ from main import initialize
 from productcatalog.servicer import ProductCatalogServicer
 from reboot.aio.secrets import MockSecretSource, Secrets
 from reboot.aio.tests import Reboot
-from reboot.aio.types import ServiceName, StateRef, StateTypeName
+from reboot.aio.types import ServiceName
 from reboot.thirdparty.mailgun import MAILGUN_API_KEY_SECRET_NAME
 from reboot.thirdparty.mailgun.servicers import MockMessageServicer
 from shipping.servicer import ShippingServicer
@@ -200,11 +200,8 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
             )
         ]
 
-        # TODO(rjh): remove the need for us to reach into the channel manager
-        # and to pass an actor ID when reaching out to a plain gRPC service.
-        async with self.context.channel_manager.get_channel_from_service_name(
+        async with self.context.channel_manager.get_channel_to_legacy_grpc_service(
             ServiceName('boutique.v1.CurrencyConverter'),
-            state_ref=StateRef.from_id(StateTypeName('unused'), 'unused'),
         ) as channel:
             stub = demo_pb2_grpc.CurrencyConverterStub(channel)
             for conversion_request, expected_conversion in test_cases:

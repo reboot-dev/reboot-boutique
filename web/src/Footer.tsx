@@ -15,7 +15,10 @@ export const Footer = () => {
             )
             <br />
             Modified By Reboot Inc (
-            <a href="https://github.com/reboot-dev/respect/">Source Code</a>)
+            <a href="https://github.com/reboot-dev/reboot-boutique/">
+              Source Code
+            </a>
+            )
           </p>
           <p className="footer-text"></p>
         </div>
