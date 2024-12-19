@@ -1,4 +1,4 @@
-import { RebootClient, RebootClientProvider } from "@reboot-dev/reboot-react";
+import { RebootClientProvider } from "@reboot-dev/reboot-react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
@@ -9,12 +9,8 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
-const client = new RebootClient(
-  process.env.REACT_APP_REBOOT_ENDPOINT as string
-);
-
 root.render(
-  <RebootClientProvider client={client}>
+  <RebootClientProvider url={process.env.REACT_APP_REBOOT_URL as string}>
     <BrowserRouter basename="/">
       <App />
     </BrowserRouter>
