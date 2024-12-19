@@ -19,7 +19,7 @@ function App() {
   const { useGetItems } = useCart({ id: CART_ACTOR_ID });
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_REBOOT_ENDPOINT}/get_supported_currencies`)
+    fetch(`${process.env.REACT_APP_REBOOT_URL}/get_supported_currencies`)
       .then(async (res) => res.json())
       .then((json: { currencyCodes: string[] }) => {
         setCurrencies(json.currencyCodes);
