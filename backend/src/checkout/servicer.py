@@ -37,13 +37,13 @@ class CheckoutServicer(Checkout.Servicer):
         request: demo_pb2.PlaceOrderRequest,
     ) -> demo_pb2.PlaceOrderResponse:
         # Get user cart.
-        cart = Cart.lookup(request.user_id)
+        cart = Cart.ref(request.user_id)
 
         get_items_response = await cart.GetItems(context)
 
         # For each item in the cart, verify that it is a real product, get its
         # price, and convert the price to user currency.
-        product_catalog = ProductCatalog.lookup(PRODUCT_CATALOG_ACTOR_ID)
+        product_catalog = ProductCatalog.ref(PRODUCT_CATALOG_ACTOR_ID)
 
         # Convert to user currency.
         order_items: list[demo_pb2.OrderItem] = []
@@ -77,7 +77,7 @@ class CheckoutServicer(Checkout.Servicer):
         # TODO: Charge the user's credit card.
 
         # Prepare the shipping.
-        shipping = Shipping.lookup(SHIPPING_ACTOR_ID)
+        shipping = Shipping.ref(SHIPPING_ACTOR_ID)
         await shipping.PrepareShipOrder(
             context,
             quote=request.quote,
@@ -109,8 +109,9 @@ class CheckoutServicer(Checkout.Servicer):
         confirmation = template.render(order=order_result)
 
         if mailgun_api_key := await self._mailgun_api_key():
-            await Message.construct().Send(
+            await Message.Send(
                 context,
+                None,
                 Options(bearer_token=mailgun_api_key),
                 recipient=request.email,
                 sender='Reboot Team <team@reboot.dev>',

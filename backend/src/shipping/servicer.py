@@ -24,9 +24,9 @@ class ShippingServicer(Shipping.Servicer):
 
         state.quotes.append(quote)
 
-        await self.lookup().schedule(
+        await self.ref().schedule(
             when=timedelta(seconds=request.quote_expiration_seconds),
-        ).ExpireQuoteTask(
+        ).ExpireQuote(
             context,
             quote=quote,
         )
@@ -59,15 +59,15 @@ class ShippingServicer(Shipping.Servicer):
         # compensatable and if we are called from within a transaction
         # we only want to actually do the shipping if the transaction
         # commits (and thus our task gets dispatched).
-        await self.lookup().schedule().ShipOrderTask(context)
+        await self.ref().schedule().ShipOrder(context)
 
         return demo_pb2.PrepareShipOrderResponse(tracking_id=str(uuid.uuid4()))
 
-    async def ExpireQuoteTask(
+    async def ExpireQuote(
         self,
         context: WriterContext,
         state: Shipping.State,
-        request: demo_pb2.ExpireQuoteTaskRequest,
+        request: demo_pb2.ExpireQuoteRequest,
     ) -> demo_pb2.Empty:
         # Remove the quote.
         quotes = [
@@ -78,11 +78,11 @@ class ShippingServicer(Shipping.Servicer):
 
         return demo_pb2.Empty()
 
-    async def ShipOrderTask(
+    async def ShipOrder(
         self,
         context: ReaderContext,
         state: Shipping.State,
-        request: demo_pb2.ShipOrderTaskRequest,
+        request: demo_pb2.ShipOrderRequest,
     ) -> demo_pb2.Empty:
         # This is where we'd actually do the shipping, retrying if we
         # get an error.

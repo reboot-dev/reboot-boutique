@@ -24,13 +24,12 @@ legacy_grpc_servicers: list[type] = [
 
 
 async def initialize(context: ExternalContext):
-    await Checkout.construct(
-        id=CHECKOUT_ACTOR_ID,
-    ).idempotently().Create(context)
+    await Checkout.idempotently().Create(context, CHECKOUT_ACTOR_ID)
 
-    await ProductCatalog.construct(
-        id=PRODUCT_CATALOG_ACTOR_ID,
-    ).idempotently().LoadProducts(context)
+    await ProductCatalog.idempotently().LoadProducts(
+        context,
+        PRODUCT_CATALOG_ACTOR_ID,
+    )
 
 
 async def main():
