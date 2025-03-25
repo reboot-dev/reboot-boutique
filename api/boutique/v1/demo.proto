@@ -171,12 +171,12 @@ service ShippingMethods {
       errors: [ "ShippingQuoteInvalidOrExpired" ],
     };
   }
-  rpc ExpireQuoteTask(ExpireQuoteTaskRequest) returns (Empty) {
+  rpc ExpireQuote(ExpireQuoteRequest) returns (Empty) {
     option (rbt.v1alpha1.method) = {
       writer: {},
     };
   }
-  rpc ShipOrderTask(ShipOrderTaskRequest) returns (Empty) {
+  rpc ShipOrder(ShipOrderRequest) returns (Empty) {
     option (rbt.v1alpha1.method) = {
       reader: {},
     };
@@ -204,11 +204,11 @@ message PrepareShipOrderResponse {
   string tracking_id = 1;
 }
 
-message ExpireQuoteTaskRequest {
+message ExpireQuoteRequest {
   ShippingQuote quote = 1;
 }
 
-message ShipOrderTaskRequest {}
+message ShipOrderRequest {}
 
 message Address {
   string street_address = 1;

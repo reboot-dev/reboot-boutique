@@ -59,7 +59,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
     async def test_checkout(self) -> None:
         """Check out a single item successfully."""
         # Add an item to a cart.
-        cart = Cart.lookup('jonathan')
+        cart = Cart.ref('jonathan')
         await cart.AddItem(
             self.context,
             item=demo_pb2.CartItem(
@@ -69,14 +69,14 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         )
 
         # Get a shipping quote for that card in preparation for checkout.
-        shipping = Shipping.lookup(SHIPPING_ACTOR_ID)
+        shipping = Shipping.ref(SHIPPING_ACTOR_ID)
         get_quote_response = await shipping.GetQuote(
             self.context,
             quote_expiration_seconds=30,
         )
 
         # Check out the order.
-        checkout = Checkout.lookup(CHECKOUT_ACTOR_ID)
+        checkout = Checkout.ref(CHECKOUT_ACTOR_ID)
 
         place_order_response = await checkout.PlaceOrder(
             self.context,
@@ -123,7 +123,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         """Check out a single item with an expired shipping quote, and see the
         checkout fail to complete."""
         # Add an item to a cart.
-        cart = Cart.lookup('jonathan')
+        cart = Cart.ref('jonathan')
         await cart.AddItem(
             self.context,
             item=demo_pb2.CartItem(
@@ -134,7 +134,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
 
         # Get a shipping quote for that card in preparation for checkout.
         # Use an expiration time of 0 so that the quote will expire immediately.
-        shipping = Shipping.lookup(SHIPPING_ACTOR_ID)
+        shipping = Shipping.ref(SHIPPING_ACTOR_ID)
         get_quote_response = await shipping.GetQuote(
             self.context,
             quote_expiration_seconds=0,
@@ -144,7 +144,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
 
         # The quote should have expired and the order should not have
         # gone through.
-        checkout = Checkout.lookup(CHECKOUT_ACTOR_ID)
+        checkout = Checkout.ref(CHECKOUT_ACTOR_ID)
 
         with self.assertRaises(Checkout.PlaceOrderAborted) as aborted:
             await checkout.PlaceOrder(
