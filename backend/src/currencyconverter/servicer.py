@@ -2,6 +2,7 @@ import grpc
 import json
 import os
 from boutique.v1 import demo_pb2, demo_pb2_grpc
+from reboot.aio.auth.authorizers import allow
 
 NANOS_CONVERSION = 1000000000
 
@@ -17,6 +18,9 @@ class CurrencyConverterServicer(demo_pb2_grpc.CurrencyConverterServicer):
         ) as file:
             for key, value in json.load(file).items():
                 self.conversions_from_euro[key] = float(value)
+
+    def authorizer(self):
+        return allow()
 
     async def GetSupportedCurrencies(
         self, request: demo_pb2.Empty, context: grpc.ServicerContext
