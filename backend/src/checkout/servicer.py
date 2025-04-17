@@ -6,6 +6,7 @@ from constants import PRODUCT_CATALOG_ACTOR_ID, SHIPPING_ACTOR_ID
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from logger import logger
 from rbt.thirdparty.mailgun.v1.mailgun_rbt import Message
+from reboot.aio.auth.authorizers import allow
 from reboot.aio.call import Options
 from reboot.aio.contexts import (
     ReaderContext,
@@ -21,6 +22,9 @@ class CheckoutServicer(Checkout.Servicer):
 
     def __init__(self):
         self._secrets = Secrets()
+
+    def authorizer(self):
+        return allow()
 
     async def Create(
         self,

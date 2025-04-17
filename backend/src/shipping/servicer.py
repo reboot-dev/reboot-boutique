@@ -2,10 +2,14 @@ import uuid
 from boutique.v1 import demo_pb2
 from boutique.v1.demo_rbt import Shipping
 from datetime import timedelta
+from reboot.aio.auth.authorizers import allow
 from reboot.aio.contexts import ReaderContext, WriterContext
 
 
 class ShippingServicer(Shipping.Servicer):
+
+    def authorizer(self):
+        return allow()
 
     async def GetQuote(
         self,

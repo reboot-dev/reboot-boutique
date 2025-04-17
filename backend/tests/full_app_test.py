@@ -8,6 +8,7 @@ from constants import CHECKOUT_ACTOR_ID, SHIPPING_ACTOR_ID
 from currencyconverter.servicer import CurrencyConverterServicer
 from main import initialize
 from productcatalog.servicer import ProductCatalogServicer
+from reboot.aio.applications import Application
 from reboot.aio.secrets import MockSecretSource, Secrets
 from reboot.aio.tests import Reboot
 from reboot.aio.types import ServiceName
@@ -37,16 +38,21 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
             CheckoutServicer,
             ShippingServicer,
             MockMessageServicer,
-            CurrencyConverterServicer,
         ]
 
+        legacy_grpc_servicers: list[type] = [CurrencyConverterServicer]
+
         await self.rbt.start()
-        self.config = await self.rbt.up(
-            servicers=servicers,
+        revision = await self.rbt.up(
+            Application(
+                servicers=servicers,
+                legacy_grpc_servicers=legacy_grpc_servicers,
+            ),
             # Mocking `Secrets` requires running in process.
             in_process=True,
         )
 
+        del revision
         self.context = self.rbt.create_external_context(
             name=f"test-{self.id()}"
         )

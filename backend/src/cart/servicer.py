@@ -1,10 +1,14 @@
 import time
 from boutique.v1 import demo_pb2
 from boutique.v1.demo_rbt import Cart
+from reboot.aio.auth.authorizers import allow
 from reboot.aio.contexts import ReaderContext, WriterContext
 
 
 class CartServicer(Cart.Servicer):
+
+    def authorizer(self):
+        return allow()
 
     async def AddItem(
         self,
