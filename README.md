@@ -106,6 +106,7 @@ npm start
 
 If using VSCode, the page will load automatically.
 If not using VSCode, visit [http://127.0.0.1:3000](http://127.0.0.1:3000).
+
 ### Tests
 
 The application comes with backend tests.
