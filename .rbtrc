@@ -22,15 +22,15 @@
 ########################################################################
 
 # Find the protos in the `api/` directory.
-protoc api/
+generate api/
 
 # Put boilerplate files in 'boilerplate/'.
-protoc --boilerplate=boilerplate/
+generate --boilerplate=boilerplate/
 
 # Tell `rbt` where to output its generated files.
 # The paths are different for backend and frontend code.
-protoc --python=backend/api
-protoc --react=web/src/gen
+generate --python=backend/api
+generate --react=web/src/gen
 
 # Watch if any generated or source files are modified.
 dev run --watch=backend/api/**/*.py
@@ -38,12 +38,15 @@ dev run --watch=backend/src/**/*.py
 
 # Tell `rbt` that this is a Python application.
 dev run --python
+serve run --python
 
 # Set the application name for commands that require it.
 cloud up --name=boutique
 cloud down --name=boutique
 dev expunge --name=boutique
 dev run --name=boutique
+serve run --name=boutique
 
 # Run the application!
 dev run --application=backend/src/main.py
+serve run --application=backend/src/main.py
