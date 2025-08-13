@@ -7,7 +7,6 @@ from constants import CHECKOUT_ACTOR_ID, PRODUCT_CATALOG_ACTOR_ID
 from currencyconverter.servicer import CurrencyConverterServicer
 from productcatalog.servicer import ProductCatalogServicer
 from reboot.aio.applications import Application, Servicer
-from reboot.aio.external import ExternalContext
 from shipping.servicer import ShippingServicer
 
 # All of the servicers that we need to run!
@@ -23,13 +22,10 @@ legacy_grpc_servicers: list[type] = [
 ]
 
 
-async def initialize(context: ExternalContext):
-    await Checkout.idempotently().Create(context, CHECKOUT_ACTOR_ID)
+async def initialize(context):
+    await Checkout.Create(context, CHECKOUT_ACTOR_ID)
 
-    await ProductCatalog.idempotently().LoadProducts(
-        context,
-        PRODUCT_CATALOG_ACTOR_ID,
-    )
+    await ProductCatalog.LoadProducts(context, PRODUCT_CATALOG_ACTOR_ID)
 
 
 async def main():

@@ -29,7 +29,6 @@ class CheckoutServicer(Checkout.Servicer):
     async def Create(
         self,
         context: WriterContext,
-        state: Checkout.State,
         request: demo_pb2.Empty,
     ) -> demo_pb2.Empty:
         return demo_pb2.Empty()
@@ -37,7 +36,6 @@ class CheckoutServicer(Checkout.Servicer):
     async def PlaceOrder(
         self,
         context: TransactionContext,
-        state: Checkout.State,
         request: demo_pb2.PlaceOrderRequest,
     ) -> demo_pb2.PlaceOrderResponse:
         # Get user cart.
@@ -99,7 +97,7 @@ class CheckoutServicer(Checkout.Servicer):
             items=order_items,
         )
 
-        state.orders.append(order_result)
+        self.state.orders.append(order_result)
 
         # Use a template in the 'templates' folder.
         env = Environment(
@@ -130,10 +128,9 @@ class CheckoutServicer(Checkout.Servicer):
     async def Orders(
         self,
         context: ReaderContext,
-        state: Checkout.State,
         request: demo_pb2.OrdersRequest,
     ) -> demo_pb2.OrdersResponse:
-        return demo_pb2.OrdersResponse(orders=reversed(state.orders))
+        return demo_pb2.OrdersResponse(orders=reversed(self.state.orders))
 
     async def _mailgun_api_key(self) -> Optional[str]:
         try:
