@@ -14,7 +14,6 @@ class ShippingServicer(Shipping.Servicer):
     async def GetQuote(
         self,
         context: WriterContext,
-        state: Shipping.State,
         request: demo_pb2.GetQuoteRequest,
     ) -> demo_pb2.GetQuoteResponse:
         quote = demo_pb2.ShippingQuote(
@@ -26,7 +25,7 @@ class ShippingServicer(Shipping.Servicer):
             ),
         )
 
-        state.quotes.append(quote)
+        self.state.quotes.append(quote)
 
         await self.ref().schedule(
             when=timedelta(seconds=request.quote_expiration_seconds),
@@ -40,17 +39,16 @@ class ShippingServicer(Shipping.Servicer):
     async def PrepareShipOrder(
         self,
         context: WriterContext,
-        state: Shipping.State,
         request: demo_pb2.PrepareShipOrderRequest,
     ) -> demo_pb2.PrepareShipOrderResponse:
         # Remove the quote, unless it is missing implying it has been
         # expired, in which case we raise an error.
         valid_quote = False
         i = 0
-        while i < len(state.quotes):
-            if state.quotes[i].id == request.quote.id:
+        while i < len(self.state.quotes):
+            if self.state.quotes[i].id == request.quote.id:
                 valid_quote = True
-                del state.quotes[i]
+                del self.state.quotes[i]
                 break
             i += 1
 
@@ -70,22 +68,21 @@ class ShippingServicer(Shipping.Servicer):
     async def ExpireQuote(
         self,
         context: WriterContext,
-        state: Shipping.State,
         request: demo_pb2.ExpireQuoteRequest,
     ) -> demo_pb2.Empty:
         # Remove the quote.
         quotes = [
-            quote for quote in state.quotes if quote.id != request.quote.id
+            quote for quote in self.state.quotes
+            if quote.id != request.quote.id
         ]
-        del state.quotes[:]
-        state.quotes.extend(quotes)
+        del self.state.quotes[:]
+        self.state.quotes.extend(quotes)
 
         return demo_pb2.Empty()
 
     async def ShipOrder(
         self,
         context: ReaderContext,
-        state: Shipping.State,
         request: demo_pb2.ShipOrderRequest,
     ) -> demo_pb2.Empty:
         # This is where we'd actually do the shipping, retrying if we

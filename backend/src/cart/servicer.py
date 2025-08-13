@@ -13,7 +13,6 @@ class CartServicer(Cart.Servicer):
     async def AddItem(
         self,
         context: WriterContext,
-        state: Cart.State,
         request: demo_pb2.AddItemRequest,
     ) -> demo_pb2.Empty:
 
@@ -23,7 +22,7 @@ class CartServicer(Cart.Servicer):
         # adding it again.
         previous_item = next(
             (
-                item for item in state.items
+                item for item in self.state.items
                 if item.product_id == request.item.product_id
             ),
             None,
@@ -33,23 +32,21 @@ class CartServicer(Cart.Servicer):
             previous_item.added_at = now
         else:
             request.item.added_at = now
-            state.items.append(request.item)
+            self.state.items.append(request.item)
 
         return demo_pb2.Empty()
 
     async def GetItems(
         self,
         context: ReaderContext,
-        state: Cart.State,
         request: demo_pb2.GetItemsRequest,
     ) -> demo_pb2.GetItemsResponse:
-        return demo_pb2.GetItemsResponse(items=state.items)
+        return demo_pb2.GetItemsResponse(items=self.state.items)
 
     async def EmptyCart(
         self,
         context: WriterContext,
-        state: Cart.State,
         request: demo_pb2.EmptyCartRequest,
     ) -> demo_pb2.Empty:
-        del state.items[:]
+        del self.state.items[:]
         return demo_pb2.Empty()
