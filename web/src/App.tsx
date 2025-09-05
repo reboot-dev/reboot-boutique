@@ -1,6 +1,6 @@
-import { Footer } from "Footer";
-import { HomePage } from "HomePage";
-import { Product } from "Product";
+import { Footer } from "./Footer";
+import { HomePage } from "./HomePage";
+import { Product } from "./Product";
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Cart } from "./Cart";
@@ -19,7 +19,7 @@ function App() {
   const { useGetItems } = useCart({ id: CART_ACTOR_ID });
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_REBOOT_URL}/get_supported_currencies`)
+    fetch(`${import.meta.env.VITE_REBOOT_URL}/get_supported_currencies`)
       .then(async (res) => res.json())
       .then((json: { currencyCodes: string[] }) => {
         setCurrencies(json.currencyCodes);

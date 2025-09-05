@@ -1,19 +1,19 @@
 import { PartialMessage } from "@bufbuild/protobuf";
-import type { ResponseOrAborted } from "@reboot-dev/reboot-react";
+import type { ResponseOrAborted } from "@reboot-dev/reboot-web";
 import {
   GetProductRequest,
   OrderResult,
   OrdersResponse,
   PlaceOrderRequest,
   Product,
-} from "gen/boutique/v1/demo_pb";
-import { ProductCatalogGetProductAborted } from "gen/boutique/v1/demo_rbt_react";
+} from "./gen/boutique/v1/demo_pb";
+import { ProductCatalogGetProductAborted } from "./gen/boutique/v1/demo_rbt_react";
 import {
   ProductItem,
   multiplyMoney,
   renderMoney,
   totalOrderCost,
-} from "helpers";
+} from "./helpers";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import css from "./PastOrders.module.css";
@@ -47,22 +47,28 @@ export const PastOrders = ({
     async function runEffect() {
       if (response !== undefined) {
         for (const order of response.orders) {
-          let productItems: ProductItem[] = [];
+          const productItems: ProductItem[] = [];
+
           for (const orderItem of order.items) {
             if (orderItem !== undefined && orderItem.item !== undefined) {
               const { response: productDetails } = await getProduct({
                 id: orderItem.item.productId,
               });
+
               const item = orderItem.item;
+
               if (productDetails !== undefined) {
                 productItems.push({
                   product: productDetails,
                   item: item,
                 });
+
                 const newOrderDetail: {
                   [id: string]: ProductItem[];
                 } = {};
+
                 newOrderDetail[order.orderId] = productItems;
+
                 setOrderDetails((orderDetails) => ({
                   ...orderDetails,
                   ...newOrderDetail,
