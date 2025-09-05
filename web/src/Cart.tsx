@@ -1,16 +1,16 @@
-import { PastOrders } from "PastOrders";
+import { PastOrders } from "./PastOrders";
 import {
   Address,
   CreditCardInfo,
   Money,
   ShippingQuote,
-} from "gen/boutique/v1/demo_pb";
+} from "./gen/boutique/v1/demo_pb";
 import {
   useCart,
   useCheckout,
   useProductCatalog,
   useShipping,
-} from "gen/boutique/v1/demo_rbt_react";
+} from "./gen/boutique/v1/demo_rbt_react";
 import {
   CATALOG_SINGLETON_ID,
   ProductItem,
@@ -19,7 +19,7 @@ import {
   renderMoney,
   totalOrderCost,
   useCurrencyConvertProductItems,
-} from "helpers";
+} from "./helpers";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -54,7 +54,7 @@ export const Cart = ({ cartId, userCurrency }: CartProps) => {
     async function runEffect() {
       if (useGetItemsResponse === undefined) return;
 
-      let nextProductItems = [];
+      const nextProductItems = [];
       for (const cartItem of useGetItemsResponse.items) {
         // For every item in the cart, find the associated product.
         const { response: productDetails } = await getProduct({

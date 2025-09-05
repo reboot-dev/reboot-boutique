@@ -29,7 +29,7 @@ export const convertedShippingCost = async (
     description: "this is the wrong api",
     price: cost,
   };
-  const response = await fetch(`${process.env.REACT_APP_REBOOT_URL}/convert`, {
+  const response = await fetch(`${import.meta.env.VITE_REBOOT_URL}/convert`, {
     method: "POST",
     body: JSON.stringify({
       products: [fakeProduct],
@@ -55,7 +55,7 @@ export const useCurrencyConvertProductItems = (
     if (userCurrency === "USD") {
       setConvertedProductItems(productItems);
     } else {
-      fetch(`${process.env.REACT_APP_REBOOT_URL}/convert`, {
+      fetch(`${import.meta.env.VITE_REBOOT_URL}/convert`, {
         method: "POST",
         body: JSON.stringify({
           products: productItems.map(
@@ -90,15 +90,17 @@ export const useCurrencyConvertProducts = (
   const [convertedProducts, setConvertedProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    let products =
+    const products =
       product instanceof Array || product === undefined ? product : [product];
 
-    if (products === undefined) return;
+    if (products === undefined) {
+      return;
+    }
 
     if (userCurrency === "USD") {
       setConvertedProducts(products);
     } else {
-      fetch(`${process.env.REACT_APP_REBOOT_URL}/convert`, {
+      fetch(`${import.meta.env.VITE_REBOOT_URL}/convert`, {
         method: "POST",
         body: JSON.stringify({
           products: products,
