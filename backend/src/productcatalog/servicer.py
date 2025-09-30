@@ -12,7 +12,7 @@ class ProductCatalogServicer(ProductCatalog.Servicer):
     def authorizer(self):
         return allow()
 
-    async def LoadProducts(
+    async def load_products(
         self,
         context: WriterContext,
         request: demo_pb2.Empty,
@@ -26,14 +26,14 @@ class ProductCatalogServicer(ProductCatalog.Servicer):
 
         return demo_pb2.Empty()
 
-    async def ListProducts(
+    async def list_products(
         self,
         context: ReaderContext,
         request: demo_pb2.Empty,
     ) -> demo_pb2.ListProductsResponse:
         return demo_pb2.ListProductsResponse(products=self.state.products)
 
-    async def GetProduct(
+    async def get_product(
         self,
         context: ReaderContext,
         request: demo_pb2.GetProductRequest,
@@ -46,7 +46,7 @@ class ProductCatalogServicer(ProductCatalog.Servicer):
         # ValueError.
         raise ValueError(f"No product found with ID '{request.id}'")
 
-    async def SearchProducts(
+    async def search_products(
         self,
         context: ReaderContext,
         request: demo_pb2.SearchProductsRequest,

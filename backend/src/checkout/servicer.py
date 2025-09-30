@@ -26,14 +26,14 @@ class CheckoutServicer(Checkout.Servicer):
     def authorizer(self):
         return allow()
 
-    async def Create(
+    async def create(
         self,
         context: WriterContext,
         request: demo_pb2.Empty,
     ) -> demo_pb2.Empty:
         return demo_pb2.Empty()
 
-    async def PlaceOrder(
+    async def place_order(
         self,
         context: TransactionContext,
         request: demo_pb2.PlaceOrderRequest,
@@ -41,7 +41,7 @@ class CheckoutServicer(Checkout.Servicer):
         # Get user cart.
         cart = Cart.ref(request.user_id)
 
-        get_items_response = await cart.GetItems(context)
+        get_items_response = await cart.get_items(context)
 
         # For each item in the cart, verify that it is a real product, get its
         # price, and convert the price to user currency.
@@ -55,7 +55,7 @@ class CheckoutServicer(Checkout.Servicer):
                 demo_pb2.CurrencyConversionRequest(
                     products=[
                         (
-                            await product_catalog.GetProduct(
+                            await product_catalog.get_product(
                                 context,
                                 id=item.product_id,
                             )
@@ -80,13 +80,13 @@ class CheckoutServicer(Checkout.Servicer):
 
         # Prepare the shipping.
         shipping = Shipping.ref(SHIPPING_ACTOR_ID)
-        await shipping.PrepareShipOrder(
+        await shipping.prepare_ship_order(
             context,
             quote=request.quote,
         )
 
         # Empty the user's cart.
-        await cart.EmptyCart(context)
+        await cart.empty_cart(context)
 
         # Send a confirmation email to the user.
         order_id = str(uuid.uuid4())
@@ -111,7 +111,7 @@ class CheckoutServicer(Checkout.Servicer):
         confirmation = template.render(order=order_result)
 
         if mailgun_api_key := await self._mailgun_api_key():
-            await Message.Send(
+            await Message.send(
                 context,
                 None,
                 Options(bearer_token=mailgun_api_key),
@@ -125,7 +125,7 @@ class CheckoutServicer(Checkout.Servicer):
 
         return demo_pb2.PlaceOrderResponse(order=order_result)
 
-    async def Orders(
+    async def orders(
         self,
         context: ReaderContext,
         request: demo_pb2.OrdersRequest,
