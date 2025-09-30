@@ -10,7 +10,7 @@ class CartServicer(Cart.Servicer):
     def authorizer(self):
         return allow()
 
-    async def AddItem(
+    async def add_item(
         self,
         context: WriterContext,
         request: demo_pb2.AddItemRequest,
@@ -36,14 +36,14 @@ class CartServicer(Cart.Servicer):
 
         return demo_pb2.Empty()
 
-    async def GetItems(
+    async def get_items(
         self,
         context: ReaderContext,
         request: demo_pb2.GetItemsRequest,
     ) -> demo_pb2.GetItemsResponse:
         return demo_pb2.GetItemsResponse(items=self.state.items)
 
-    async def EmptyCart(
+    async def empty_cart(
         self,
         context: WriterContext,
         request: demo_pb2.EmptyCartRequest,

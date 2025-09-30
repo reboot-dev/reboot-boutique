@@ -11,7 +11,7 @@ class ShippingServicer(Shipping.Servicer):
     def authorizer(self):
         return allow()
 
-    async def GetQuote(
+    async def get_quote(
         self,
         context: WriterContext,
         request: demo_pb2.GetQuoteRequest,
@@ -29,14 +29,14 @@ class ShippingServicer(Shipping.Servicer):
 
         await self.ref().schedule(
             when=timedelta(seconds=request.quote_expiration_seconds),
-        ).ExpireQuote(
+        ).expire_quote(
             context,
             quote=quote,
         )
 
         return demo_pb2.GetQuoteResponse(quote=quote)
 
-    async def PrepareShipOrder(
+    async def prepare_ship_order(
         self,
         context: WriterContext,
         request: demo_pb2.PrepareShipOrderRequest,
@@ -61,11 +61,11 @@ class ShippingServicer(Shipping.Servicer):
         # compensatable and if we are called from within a transaction
         # we only want to actually do the shipping if the transaction
         # commits (and thus our task gets dispatched).
-        await self.ref().schedule().ShipOrder(context)
+        await self.ref().schedule().ship_order(context)
 
         return demo_pb2.PrepareShipOrderResponse(tracking_id=str(uuid.uuid4()))
 
-    async def ExpireQuote(
+    async def expire_quote(
         self,
         context: WriterContext,
         request: demo_pb2.ExpireQuoteRequest,
@@ -80,7 +80,7 @@ class ShippingServicer(Shipping.Servicer):
 
         return demo_pb2.Empty()
 
-    async def ShipOrder(
+    async def ship_order(
         self,
         context: ReaderContext,
         request: demo_pb2.ShipOrderRequest,

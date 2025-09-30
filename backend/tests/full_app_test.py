@@ -66,7 +66,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         """Check out a single item successfully."""
         # Add an item to a cart.
         cart = Cart.ref('jonathan')
-        await cart.AddItem(
+        await cart.add_item(
             self.context,
             item=demo_pb2.CartItem(
                 product_id='OLJCESPC7Z',
@@ -76,7 +76,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
 
         # Get a shipping quote for that card in preparation for checkout.
         shipping = Shipping.ref(SHIPPING_ACTOR_ID)
-        get_quote_response = await shipping.GetQuote(
+        get_quote_response = await shipping.get_quote(
             self.context,
             quote_expiration_seconds=30,
         )
@@ -84,7 +84,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # Check out the order.
         checkout = Checkout.ref(CHECKOUT_ACTOR_ID)
 
-        place_order_response = await checkout.PlaceOrder(
+        place_order_response = await checkout.place_order(
             self.context,
             user_id='jonathan',
             user_currency='USD',
@@ -114,11 +114,11 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         )
 
         # The cart must have been emptied.
-        get_items_response = await cart.GetItems(self.context)
+        get_items_response = await cart.get_items(self.context)
         self.assertEqual(len(get_items_response.items), 0)
 
         # The order must have been registered.
-        orders_response = await checkout.Orders(self.context)
+        orders_response = await checkout.orders(self.context)
         self.assertEqual(len(orders_response.orders), 1)
         self.assertEqual(
             orders_response.orders[0].order_id,
@@ -130,7 +130,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         checkout fail to complete."""
         # Add an item to a cart.
         cart = Cart.ref('jonathan')
-        await cart.AddItem(
+        await cart.add_item(
             self.context,
             item=demo_pb2.CartItem(
                 product_id='OLJCESPC7Z',
@@ -141,7 +141,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         # Get a shipping quote for that card in preparation for checkout.
         # Use an expiration time of 0 so that the quote will expire immediately.
         shipping = Shipping.ref(SHIPPING_ACTOR_ID)
-        get_quote_response = await shipping.GetQuote(
+        get_quote_response = await shipping.get_quote(
             self.context,
             quote_expiration_seconds=0,
         )
@@ -153,7 +153,7 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
         checkout = Checkout.ref(CHECKOUT_ACTOR_ID)
 
         with self.assertRaises(Checkout.PlaceOrderAborted) as aborted:
-            await checkout.PlaceOrder(
+            await checkout.place_order(
                 self.context,
                 user_id='jonathan',
                 user_currency='USD',
