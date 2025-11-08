@@ -113,7 +113,6 @@ class CheckoutServicer(Checkout.Servicer):
         if mailgun_api_key := await self._mailgun_api_key():
             await Message.send(
                 context,
-                None,
                 Options(bearer_token=mailgun_api_key),
                 recipient=request.email,
                 sender='Reboot Team <team@reboot.dev>',
