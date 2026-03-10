@@ -48,8 +48,6 @@ class TestCase(unittest.IsolatedAsyncioTestCase):
                 servicers=servicers,
                 legacy_grpc_servicers=legacy_grpc_servicers,
             ),
-            # Mocking `Secrets` requires running in process.
-            in_process=True,
         )
 
         del revision
